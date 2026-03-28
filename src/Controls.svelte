@@ -89,13 +89,15 @@
     translate: -50% 0;
     min-width: 1rem;
     height: 2rem;
+    border-start-start-radius: 0.5rem;
+    border-start-end-radius: 0.5rem;
 
     display: flex;
     background-color: var(--m3c-surface-container-low);
-    transition: height var(--transition);
+    transition:
+      height var(--transition),
+      border-radius var(--transition);
 
-    border-start-start-radius: 0.25rem;
-    border-start-end-radius: 0.25rem;
     overflow: hidden;
     anchor-name: --controls;
 
@@ -145,6 +147,8 @@
 
   .controls:not(:hover, :focus-within) {
     height: 0.5rem;
+    border-start-start-radius: 0.25rem;
+    border-start-end-radius: 0.25rem;
   }
   .controls:is(:hover, :focus-within)::after {
     translate: -50% -200%;
