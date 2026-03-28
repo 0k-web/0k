@@ -1,0 +1,1 @@
+once i start making releases, put this text in: "0K can be hosted on any static hosting service, from CodeHS and Techsmart, to Google Cloud Storage and S3, Firebase Hosting and Render Static, and even pages.gay and IPFS."

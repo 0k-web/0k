@@ -1,18 +1,125 @@
+<style>
+  header > :not(svg) {
+    all: initial;
+    font: inherit;
+    color-scheme: inherit;
+    color: var(--m3c-primary);
+    display: flex;
+    align-items: center;
+    height: 2rem;
+    cursor: pointer;
+    transition: opacity 200ms;
+  }
+  header:not(:hover, :focus-within) > :not(svg) {
+    opacity: 0;
+  }
+</style>
 <body
   style="
-    display: grid;
-    align-items: center;
-    text-align: center;
-    height: 100dvh;
+    display: flex;
+    flex-direction: column;
     margin: 0;
-    font-family: system-ui;
-    font-size: 2rem;
-    --m3c-surface: light-dark(#daffec, #00120a);
-    --m3c-on-surface: light-dark(#003627, #daffec);
-    color-scheme: light dark;
     background-color: var(--m3c-surface);
     color: var(--m3c-on-surface);
+    font-family: system-ui, sans-serif;
+    color-scheme: light dark;
+    --m3c-surface: light-dark(#daffec, #00120a);
+    --m3c-on-surface: light-dark(#003627, #daffec);
+    --m3c-primary-container-subtle: light-dark(#00f299, #00341d);
+    --m3c-on-primary-container-subtle: light-dark(#005532, #00c37b);
+    --m3c-primary: light-dark(#006940, #b1ffcd);
   "
 >
-  <p>Welcome to 0K</p>
+  <canvas
+    style="
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      image-rendering: pixelated;
+      color: var(--m3c-primary-container-subtle);
+    "
+  ></canvas>
+  <header
+    style="
+      display: flex;
+      align-self: start;
+      flex-direction: column;
+      margin: 0.5rem;
+      color: var(--m3c-primary);
+    "
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="32"
+      height="32"
+      viewBox="0 0 24 24"
+      style="border-radius: 0.5rem; margin-bottom: 0.5rem"
+    >
+      <path fill="var(--m3c-primary-container-subtle)" d="M0 0h24v24H0z" />
+      <path
+        fill="var(--m3c-on-primary-container-subtle)"
+        d="M6.21 18.94q-1.72 0-2.9-.8T1.53 15.8q-.6-1.56-.6-3.8t.6-3.78q.6-1.56 1.78-2.36t2.9-.8 2.9.8 1.78 2.36q.6 1.54.6 3.78t-.6 3.8q-.6 1.54-1.78 2.34t-2.9.8m0-1.48q.78 0 1.36-.28.6-.28 1.02-.8l-5.34-7.7q-.26.64-.38 1.48T2.75 12q0 1.74.36 2.96.38 1.22 1.14 1.86.78.64 1.96.64M3.95 7.48l5.3 7.62q.22-.64.32-1.4.1-.78.1-1.7 0-1.32-.22-2.32-.2-1.02-.64-1.72-.42-.7-1.08-1.06-.64-.36-1.52-.36-.72 0-1.28.24t-.98.7m8.3 11.22V5.34h1.88v6.72l6.02-6.72h2.34l-5.1 5.58 5.68 7.78h-2.3l-4.64-6.4-2 2.2v4.2z"
+      />
+    </svg>
+    <a href="https://games-site.github.io">Try an example GitHub Pages</a>
+    <button>Settings</button>
+    <button oncl>GitHub</button>
+  </header>
 </body>
+<script>
+  const canvas = document.querySelector('canvas');
+  const ctx = canvas.getContext('2d');
+  const scheme = matchMedia('(prefers-color-scheme: dark)');
+  const SEED = 0x0f0f0f;
+
+  const hash = (x, y) => {
+    let s = Math.imul(x, 0x1f123bb5) ^ Math.imul(y, 0x5f356495) ^ SEED;
+    s ^= s >>> 15;
+    s = Math.imul(s, 0x2c1b3c6d);
+    s ^= s >>> 12;
+    s = Math.imul(s, 0x297a2d39);
+    s ^= s >>> 15;
+    return (s >>> 0) / 0x100000000;
+  };
+
+  const render = () => {
+    const style = getComputedStyle(canvas);
+    const surface = style.backgroundColor;
+    const accent = style.color;
+
+    const w = innerWidth,
+      h = innerHeight;
+    const cell = Math.max(6, Math.round(Math.min(w, h) / 56));
+    const cols = Math.ceil(w / cell),
+      rows = Math.ceil(h / cell);
+
+    canvas.width = cols;
+    canvas.height = rows;
+
+    ctx.fillStyle = surface;
+    ctx.fillRect(0, 0, cols, rows);
+    ctx.fillStyle = accent;
+
+    const diag = Math.hypot(w / 2, h);
+    for (let y = 0; y < rows; y++) {
+      for (let x = 0; x < cols; x++) {
+        const dx = (x + 0.5) * cell - w / 2;
+        const dy = (y + 0.5) * cell - h;
+        const chance = Math.max(0, Math.min(1, 1.25 - (2 * Math.hypot(dx, dy)) / diag));
+        if (hash(x, y) < chance) ctx.fillRect(x, y, 1, 1);
+      }
+    }
+  };
+
+  let raf;
+  const schedule = () =>
+    (raf ??= requestAnimationFrame(() => {
+      raf = null;
+      render();
+    }));
+  window.addEventListener('resize', schedule);
+  scheme.addEventListener('change', schedule);
+  schedule();
+</script>

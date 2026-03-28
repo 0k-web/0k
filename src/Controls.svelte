@@ -30,7 +30,7 @@
   let urlIndex = $derived(history.indexOf(url));
 </script>
 
-<div class="controls">
+<div class="controls" class:force-expand={url == 'https://home.0k/'}>
   <input
     type="url"
     autocomplete="off"
@@ -47,10 +47,12 @@
     {#each history as entry, i}
       {@const entryURL = new URL(entry)}
       {@const entrySimple =
-        entryURL.hostname +
-        (entryURL.pathname != '/' ? entryURL.pathname : '') +
-        entryURL.search +
-        entryURL.hash}
+        i == urlIndex
+          ? 'Here'
+          : entryURL.hostname +
+            (entryURL.pathname != '/' ? entryURL.pathname : '') +
+            entryURL.search +
+            entryURL.hash}
       <button
         onclick={() => {
           go(entry);
@@ -148,22 +150,22 @@
       visibility allow-discrete var(--transition);
   }
 
-  .controls:not(:hover, :focus-within) {
+  .controls:not(:hover, :focus-within, .force-expand) {
     height: 0.5rem;
     border-start-start-radius: 0.25rem;
     border-start-end-radius: 0.25rem;
   }
-  .controls:is(:hover, :focus-within)::after {
+  .controls:is(:hover, :focus-within, .force-expand)::after {
     translate: -50% -200%;
     opacity: 0;
     visibility: hidden;
   }
-  .controls:not(:hover, :focus-within) > input {
+  .controls:not(:hover, :focus-within, .force-expand) > input {
     width: 0;
     padding-inline: 0;
     visibility: hidden;
   }
-  .controls:not(:hover, :focus-within) > .history {
+  .controls:not(:hover, :focus-within, .force-expand) > .history {
     width: 0;
     height: 0;
     visibility: hidden;
