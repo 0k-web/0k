@@ -3,7 +3,7 @@
 
   let { url, go }: { url: string; go: (url: string) => void } = $props();
 
-  const history: string[] = $state([]);
+  const history: string[] = $state(['https://home.0k/', 'https://games-site.github.io/']);
   let oldUrl = '';
   const updateFirstLast = (url: string) => {
     if (history.includes(url)) {
