@@ -44,12 +44,16 @@
   />
   <div class="history" popover="manual" {@attach (node) => node.showPopover()}>
     {#each history as entry, i}
+      {@const entryURL = new URL(entry)}
       <button
         onclick={() => {
           go(entry);
         }}
       >
-        {entry}
+        {entryURL.hostname +
+          (entryURL.pathname != '/' ? entryURL.pathname : '') +
+          entryURL.search +
+          entryURL.hash}
         {#if i == urlIndex}
           <svg width="20" height="20" viewBox="0 0 24 24"
             ><path
@@ -190,10 +194,13 @@
     border-radius: var(--radius);
     white-space: nowrap;
 
-    padding-inline: 0.5rem;
-    gap: 0.5rem;
+    padding-inline-start: 0.5rem;
     background-color: var(--m3c-primary-container-subtle);
     color: var(--m3c-on-primary-container-subtle);
     pointer-events: auto;
+  }
+  .history > button > svg {
+    margin-inline-start: 0.25rem;
+    margin-inline-end: 0.375rem;
   }
 </style>
