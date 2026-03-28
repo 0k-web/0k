@@ -11,7 +11,6 @@
     "format": "prettier . --write"
   },
   "devDependencies": {
-    "@fontsource/atkinson-hyperlegible-next": "^5.2.7",
     "@mercuryworkshop/libcurl-transport": "2",
     "@mercuryworkshop/proxy-transports": "^1.0.2",
     "@mercuryworkshop/scramjet": "2.0.2-alpha",

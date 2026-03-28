@@ -13,9 +13,6 @@ importers:
 
   .:
     devDependencies:
-      '@fontsource/atkinson-hyperlegible-next':
-        specifier: ^5.2.7
-        version: 5.2.7
       '@mercuryworkshop/libcurl-transport':
         specifier: '2'
         version: 2.0.5
@@ -75,9 +72,6 @@ packages:
 
   '@emnapi/wasi-threads@1.2.0':
     resolution: {integrity: sha512-N10dEJNSsUx41Z6pZsXU8FjPjpBEplgH24sfkmITrBED1/U2Esum9F3lfLrMjKHHjmi557zQn7kR9R+XWXu5Rg==}
-
-  '@fontsource/atkinson-hyperlegible-next@5.2.7':
-    resolution: {integrity: sha512-FDRsNkqauNRBRiTD3YF6FV8yOVFjkcBqUjwrv6KnooEIRjsTuePUnahPsLHApWNtp1riztVCOPnr9RMHUZU3TQ==}
 
   '@jridgewell/gen-mapping@0.3.13':
     resolution: {integrity: sha512-2kkt/7niJ6MgEPxF0bYdQ6etZaA+fQvDcLKckhy1yIQOzaoKjBBjSj63/aLVjYE3qhRt5dvM+uUyfCg6UKCBbA==}
@@ -752,8 +746,6 @@ snapshots:
     dependencies:
       tslib: 2.8.1
     optional: true
-
-  '@fontsource/atkinson-hyperlegible-next@5.2.7': {}
 
   '@jridgewell/gen-mapping@0.3.13':
     dependencies:
