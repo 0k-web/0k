@@ -14,7 +14,6 @@ globalThis.addEventListener('activate', (event) => {
 });
 
 globalThis.addEventListener('fetch', (event) => {
-  console.log(event, 'should route:', shouldRoute(event));
   if (shouldRoute(event)) {
     event.respondWith(route(event));
   }

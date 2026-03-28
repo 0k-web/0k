@@ -12,6 +12,7 @@
 <script lang="ts">
   import LibcurlClient from '@mercuryworkshop/libcurl-transport';
   import loadingHome from './assets/loading-home.html?url&inline';
+  import { ZeroKTransport } from './transport';
 
   const upsertServiceWorker = async () => {
     const registration = await navigator.serviceWorker.register('/sw.js');
@@ -30,7 +31,7 @@
     const serviceworker = await upsertServiceWorker();
 
     status = 'Initializing controls';
-    const transport = new LibcurlClient({ wisp: 'wss://anura.pro/' });
+    const transport = new ZeroKTransport();
     const controller = new Controller({
       serviceworker,
       transport,
@@ -52,7 +53,7 @@
       );
     });
     _go = (url) => frame.go(url);
-    frame.go('https://news.ycombinator.com/');
+    frame.go('https://home.0k/');
   };
 </script>
 
