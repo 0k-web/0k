@@ -1,3 +1,17 @@
+diff --git a/dist/controller.api.d.ts b/dist/controller.api.d.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..94c9ed05c6536d6ede053304bcc6cf50887a87a7
+--- /dev/null
++++ b/dist/controller.api.d.ts
+@@ -0,0 +1,8 @@
++import { Controller, config } from './types/index';
++
++declare const _default: {
++    Controller: typeof Controller;
++    config: typeof config;
++};
++
++export default _default;
 diff --git a/dist/controller.api.js b/dist/controller.api.js
 index 0028475eb11789c8f59e945a5cc13e76f3eb5e4b..ee0d09ebc1180995b2d5077ff0a99633ae7b5e64 100644
 --- a/dist/controller.api.js

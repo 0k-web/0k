@@ -4,13 +4,15 @@
   background-color: var(--m3c-surface);
   color: var(--m3c-on-surface);
   accent-color: var(--m3c-primary);
+  caret-color: var(--m3c-primary);
+  interpolate-size: allow-keywords;
   --m3c-surface: light-dark(#daffec, #00120a);
   --m3c-surface-container-lowest: light-dark(#fff, #000);
   --m3c-surface-container-low: light-dark(#c1fee3, #00170f);
   --m3c-surface-container: light-dark(#b4f6d9, #001e14);
   --m3c-surface-container-high: light-dark(#aaf1d3, #00251a);
   --m3c-surface-container-highest: light-dark(#a0eccc, #002c1f);
-  --m3c-on-surface: light-dark(#003627, #bbf1d8);
+  --m3c-on-surface: light-dark(#003627, #daffec);
   --m3c-on-surface-variant: light-dark(#326552, #81b69f);
   --m3c-outline: light-dark(#4e816c, #4c7f6b);
   --m3c-outline-variant: light-dark(#83b8a1, #1c513f);
@@ -44,4 +46,8 @@
   --m3c-on-tertiary-container-subtle: light-dark(#005063, #00bae1);
   --m3c-error-container-subtle: light-dark(#ffc7c3, #60000a);
   --m3c-on-error-container-subtle: light-dark(#970016, #ff8983);
+}
+body {
+  display: grid;
+  height: 100dvh;
 }
