@@ -11,6 +11,8 @@
 
 <script lang="ts">
   import LibcurlClient from '@mercuryworkshop/libcurl-transport';
+  import loadingHome from './assets/loading-home.html?url&inline';
+
   const upsertServiceWorker = async () => {
     const registration = await navigator.serviceWorker.register('/sw.js');
     await navigator.serviceWorker.ready;
@@ -39,8 +41,7 @@
 
     const frame = controller.createFrame();
     placeholder.replaceWith(frame.element);
-    // frame.element.srcdoc = `<body style="display:grid;align-items:center;text-align:center;height:100dvh;margin:0;font-family:system-ui"><p>Loading frame<br>If you're stuck, try in Chrome</p></body>`;
-    frame.go('https://news.ycombinator.com');
+    frame.element.src = loadingHome;
 
     frame.element.addEventListener('load', () => {
       urlchange(
@@ -51,6 +52,7 @@
       );
     });
     _go = (url) => frame.go(url);
+    frame.go('https://news.ycombinator.com/');
   };
 </script>
 
@@ -74,8 +76,8 @@
   }
   .loading {
     font-size: 2rem;
-    --bg: var(--m3c-on-surface-variant);
-    --fg: var(--m3c-primary);
+    --bg: var(--m3c-on-surface);
+    --fg: color-mix(in oklch, var(--m3c-primary) 50%, var(--m3c-primary-container));
     background-image: linear-gradient(
       in oklab to right,
       var(--bg) 0%,

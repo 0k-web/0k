@@ -35,6 +35,7 @@
     type="url"
     autocomplete="off"
     spellcheck="false"
+    placeholder="URL"
     value={url}
     onkeypress={(e) => {
       if (e.key == 'Enter') {
@@ -45,15 +46,17 @@
   <div class="history" popover="manual" {@attach (node) => node.showPopover()}>
     {#each history as entry, i}
       {@const entryURL = new URL(entry)}
+      {@const entrySimple =
+        entryURL.hostname +
+        (entryURL.pathname != '/' ? entryURL.pathname : '') +
+        entryURL.search +
+        entryURL.hash}
       <button
         onclick={() => {
           go(entry);
         }}
       >
-        {entryURL.hostname +
-          (entryURL.pathname != '/' ? entryURL.pathname : '') +
-          entryURL.search +
-          entryURL.hash}
+        {entrySimple.length > 80 ? `${entrySimple.slice(0, 80)}...` : entrySimple}
         {#if i == urlIndex}
           <svg width="20" height="20" viewBox="0 0 24 24"
             ><path
