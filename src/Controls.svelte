@@ -29,8 +29,8 @@
     background-color: var(--m3c-surface-container-low);
     transition: height var(--transition);
 
-    border-start-start-radius: 0.5rem;
-    border-start-end-radius: 0.5rem;
+    border-start-start-radius: 0.25rem;
+    border-start-end-radius: 0.25rem;
     overflow: hidden;
 
     --transition: linear(
