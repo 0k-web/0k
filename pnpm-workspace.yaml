@@ -1,0 +1,2 @@
+patchedDependencies:
+  '@mercuryworkshop/scramjet-controller': patches/@mercuryworkshop__scramjet-controller.patch
