@@ -41,7 +41,7 @@ TODO
 
 ## The zen of 0K / 0K from first principles
 
-Every proxy site faces two problems: hosting itself, and tunneling traffic.
+Every site like 0K faces two problems: hosting itself, and tunneling traffic.
 
 **Hosting.**
 
