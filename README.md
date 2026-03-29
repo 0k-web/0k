@@ -4,16 +4,6 @@
 
 It does all of this at absolute zero: 0K is distributed in static, frozen form.
 
-## Viewing `github.io` sites
-
-Just use the URL bar to open it.
-
-## Using local sites
-
-In Settings (home -> 0K menu), you can make a local site. This site can be based on a HTML file, folder, zip, or GitHub repository. Even though you give local sites a name like `calculator.0k`, local sites stay on your computer.
-
-Local sites are useful for working around restrictions around local files that come from browser or organization policies.
-
 ## Using sites from the web
 
 0K needs you to run your own tunnel to access the rest of the internet. Don't worry - it's easy, and it's what makes 0K free and reliable.
@@ -47,3 +37,34 @@ TODO
 TODO
 
 </details>
+
+
+## The zen of 0K / 0K from first principles
+
+Every proxy site faces two problems: hosting itself, and tunneling traffic.
+
+**Hosting.**
+
+Custom domains cost money, effort, and get blocked anyway.
+
+Dynamic hosting on shared domains is mostly already blocked, and expensive.
+
+Static hosting on shared domains is durable - blocking it means blocking CDNs or tools for students to code.
+
+**Tunneling.**
+
+There's a trend to use static hosting on shared domains, but still tunnel through a custom domain.
+
+These tunnels cost money, effort, and could be blocked if filters started respecting the PSL or detecting AI-generated placeholders.
+
+Everybody has a personal device.  
+Everybody can reach Google AMP.  
+Therefore, 0K's tunnels run over personal devices, with handshakes over AMP.  
+So 0K is 100% shared domains.
+
+## Credits
+
+- Adrift: inspiration for using WebRTC
+- Snowfort: inspiration for using Google Amp
+- Night Network: inspiration for building to SVG and hosting on jsDelivr
+- Various skids: inspiration for suggesting hosting on Techsmart and Google Cloud Storage
