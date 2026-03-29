@@ -33,7 +33,7 @@ jobs:
         run: pnpm build
 
       - name: Zip artifacts
-        run: zip -r 0k.zip dist/
+        run: cd dist && zip -r ../0k.zip .
 
       - name: Release
         uses: ncipollo/release-action@v1
