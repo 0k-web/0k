@@ -48,7 +48,7 @@
       {@const entryURL = new URL(entry)}
       {@const entrySimple =
         i == urlIndex
-          ? 'Here'
+          ? 'Reload'
           : entryURL.hostname +
             (entryURL.pathname != '/' ? entryURL.pathname : '') +
             entryURL.search +

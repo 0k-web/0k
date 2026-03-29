@@ -10,7 +10,6 @@
 </script>
 
 <script lang="ts">
-  import LibcurlClient from '@mercuryworkshop/libcurl-transport';
   import loadingHome from './assets/loading-home.html?url&inline';
   import { ZeroKTransport } from './transport';
 
@@ -23,7 +22,8 @@
     return sw;
   };
 
-  let { urlchange }: { urlchange: (url: string) => void } = $props();
+  let { urlchange, openSettings }: { urlchange: (url: string) => void; openSettings: () => void } =
+    $props();
 
   let status = $state('0K is loading');
   const load = async (placeholder: HTMLDivElement) => {
@@ -45,12 +45,21 @@
     frame.element.src = loadingHome;
 
     frame.element.addEventListener('load', () => {
-      urlchange(
-        globalThis.$scramjet.unrewriteUrl(
-          frame.element.contentWindow!.location.href,
-          frame.context,
-        ),
+      const url = globalThis.$scramjet.unrewriteUrl(
+        frame.element.contentWindow!.location.href,
+        frame.context,
       );
+      if (url == 'https://home.0k/') {
+        // @ts-expect-error window is untyped
+        frame.element.contentWindow!.openSettings = () => {
+          openSettings();
+        };
+        // @ts-expect-error window is untyped
+        frame.element.contentWindow!.openGitHub = () => {
+          open('https://github.com/0k-web/0k', '_blank');
+        };
+      }
+      urlchange(url);
     });
     _go = (url) => frame.go(url);
     frame.go('https://home.0k/');

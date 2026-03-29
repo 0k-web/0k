@@ -5,15 +5,10 @@ import type {
   TransferrableResponse,
   FetchBodyType,
 } from '@mercuryworkshop/proxy-transports';
-import { keyGithubBehavior } from './config/configStorage';
-import home from './assets/home.html?raw';
+import { keyGitHubBehavior } from './settings/settingsLocalStorage';
+import { loadGitHubIo, loadHome, loadNotKnown, loadPassthrough } from './transport-logic-basic';
+import { rawGithubusercontentCom, cdnJsdelivrNet, makeBody } from './transport-logic+';
 
-const makeBody = (status: number, statusText: string, headers: Headers, body: FetchBodyType) => ({
-  status,
-  statusText,
-  headers: [...headers],
-  body,
-});
 export class ZeroKTransport implements ProxyTransport {
   ready = true;
   async init() {}
@@ -35,57 +30,51 @@ export class ZeroKTransport implements ProxyTransport {
     headers: RawHeaders,
     signal: AbortSignal | undefined,
   ): Promise<TransferrableResponse> {
-    const githubBehavior = localStorage[keyGithubBehavior] || 'githubusercontent';
+    const githubBehavior = localStorage[keyGitHubBehavior] || 'githubusercontent';
 
     const isHome = method == 'GET' && remote.href == 'https://home.0k/';
+    const isLocalSite = method == 'GET' && remote.host.endsWith('.0k');
     const isPassthrough = method == 'GET' && remote.host == 'fonts.googleapis.com';
     const isGithubIo = method == 'GET' && remote.host.endsWith('.github.io');
-    const githubRawMatch =
+    const matchGithubRaw =
       method == 'GET' &&
       remote.href.match(
-        /^https:\/\/github\.com\/([a-zA-Z0-9-]+\/[a-zA-Z0-9-.]+)\/blob\/([a-zA-Z0-9-]+)(\/.+)?raw=true$/,
+        /^https:\/\/github\.com\/([a-zA-Z0-9-]+\/[a-zA-Z0-9-.]+)\/blob\/([a-zA-Z0-9-]+\/.+)?raw=true$/,
       );
     if (isHome) {
-      const headers = new Headers();
-      headers.set('content-type', 'text/html; charset=utf-8');
-      return makeBody(200, 'OK', headers, home);
+      return loadHome();
+    }
+    if (isLocalSite) {
+      const cacheName = `0k-site/${remote.host.replace('.0k', '')}`;
+      const cacheExists = await caches.has(cacheName);
+      if (!cacheExists) {
+        return makeBody(404, 'Not Found', new Headers(), `No local site called "${remote.host}".`);
+      }
+      const cache = await caches.open(cacheName);
+      const response = await cache.match(remote.origin + remote.pathname);
+      if (!response) {
+        return makeBody(404, 'Not Found', new Headers(), `No files at "${remote.pathname}".`);
+      }
+      return makeBody(200, 'OK', response.headers, response.body!);
     }
     if (isPassthrough) {
-      const r = await fetch(remote.href);
-      return makeBody(r.status, r.statusText, r.headers, r.body!);
+      return await loadPassthrough(remote.href);
     }
 
     if (isGithubIo && githubBehavior == 'githubusercontent') {
-      const owner = remote.host.split('.')[0];
-      let path = remote.pathname;
-      if (path.endsWith('/')) {
-        path += 'index.html';
-      }
-      const r = await fetch(
-        `https://raw.githubusercontent.com/${owner}/${owner}.github.io/refs/heads/main${path}`,
-      );
-      if (r.ok && r.body) {
-        const headers = new Headers(r.headers);
-        if (path.endsWith('.html')) {
-          headers.set('content-type', 'text/html; charset=utf-8');
-        }
-        if (path.endsWith('.css')) {
-          headers.set('content-type', 'text/css; charset=utf-8');
-        }
-        if (path.endsWith('.js')) {
-          headers.set('content-type', 'text/javascript; charset=utf-8');
-        }
-        return makeBody(r.status, r.statusText, headers, r.body);
-      }
-      return makeBody(404, 'Not Found', new Headers(), 'Not available');
+      return await loadGitHubIo(remote.host, remote.pathname, rawGithubusercontentCom);
     }
-    if (githubRawMatch && githubBehavior == 'githubusercontent') {
-      const [, repo, branch, path] = githubRawMatch;
-      const r = await fetch(
-        `https://raw.githubusercontent.com/${repo}/refs/heads/${branch}${path}`,
-      );
-      return makeBody(r.status, r.statusText, r.headers, r.body!);
+    if (isGithubIo && githubBehavior == 'jsdelivr') {
+      return await loadGitHubIo(remote.host, remote.pathname, cdnJsdelivrNet);
     }
-    return makeBody(500, 'Internal Server Error', new Headers(), 'Not known');
+
+    if (matchGithubRaw && githubBehavior == 'githubusercontent') {
+      return await loadPassthrough(rawGithubusercontentCom(matchGithubRaw[1], matchGithubRaw[2]));
+    }
+    if (matchGithubRaw && githubBehavior == 'jsdelivr') {
+      return await loadPassthrough(cdnJsdelivrNet(matchGithubRaw[1], matchGithubRaw[2]));
+    }
+
+    return loadNotKnown();
   }
 }

@@ -13,9 +13,6 @@ importers:
 
   .:
     devDependencies:
-      '@mercuryworkshop/libcurl-transport':
-        specifier: '2'
-        version: 2.0.5
       '@mercuryworkshop/proxy-transports':
         specifier: ^1.0.2
         version: 1.0.2
@@ -37,6 +34,9 @@ importers:
       '@unocss/reset':
         specifier: ^66.6.7
         version: 66.6.7
+      '@zip.js/zip.js':
+        specifier: ^2.8.23
+        version: 2.8.23
       prettier:
         specifier: ^3.8.1
         version: 3.8.1
@@ -88,9 +88,6 @@ packages:
 
   '@jridgewell/trace-mapping@0.3.31':
     resolution: {integrity: sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw==}
-
-  '@mercuryworkshop/libcurl-transport@2.0.5':
-    resolution: {integrity: sha512-YkAPEAWTEUZZkEOejmRQJxNHw90+kNQnoiSqa5H2sExHBXXdGSXEtg7/35A53U8MDVaznpAwjVbXRONSsfatzw==}
 
   '@mercuryworkshop/proxy-transports@1.0.2':
     resolution: {integrity: sha512-zgD+JMYNSx8LxVLWwGPPVnoDHjoh1GqqwUJIjhIwCwhy+Z7g+MhmiTJvCcRPAo7qXXbqJwIrpBJduRSOrjMV7g==}
@@ -361,6 +358,10 @@ packages:
   '@unocss/reset@66.6.7':
     resolution: {integrity: sha512-+OjpLDEaPmhTQ3Gj7EaKApNM92TM9f9gLgHNa79+66wIll9IfhKfEmJXnF9y1SE725n4PmPIQgC9k313HztMLA==}
 
+  '@zip.js/zip.js@2.8.23':
+    resolution: {integrity: sha512-RB+RLnxPJFPrGvQ9rgO+4JOcsob6lD32OcF0QE0yg24oeW9q8KnTTNlugcDaIveEcCbclobJcZP+fLQ++sH0bw==}
+    engines: {bun: '>=0.7.0', deno: '>=1.0.0', node: '>=18.0.0'}
+
   acorn@8.16.0:
     resolution: {integrity: sha512-UVJyE9MttOsBQIDKw1skb9nAwQuR5wuGD3+82K6JgJlm/Y+KI92oNsMNGZCYdDsVtRHSak0pcV5Dno5+4jh9sw==}
     engines: {node: '>=0.4.0'}
@@ -478,9 +479,6 @@ packages:
   is-regexp@3.1.0:
     resolution: {integrity: sha512-rbku49cWloU5bSMI+zaRaXdQHXnthP6DZ/vLnfdSKyL4zUzuWnomtOEiZZOd+ioQ+avFo/qau3KPTc7Fjy1uPA==}
     engines: {node: '>=12'}
-
-  libcurl.js@0.7.4:
-    resolution: {integrity: sha512-UpvVirvATP7fD0t4rnsxVRuUpPVIo2QvWj4+5JrMsd1KSEvYkON36+COOPAl88hPlGJddk+DfZRvyF7KG7YcSA==}
 
   lightningcss-android-arm64@1.32.0:
     resolution: {integrity: sha512-YK7/ClTt4kAK0vo6w3X+Pnm0D2cf2vPHbhOXdoNti1Ga0al1P4TBZhwjATvjNwLEBCnKvjJc2jQgHXH0NEwlAg==}
@@ -766,10 +764,6 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
 
-  '@mercuryworkshop/libcurl-transport@2.0.5':
-    dependencies:
-      libcurl.js: 0.7.4
-
   '@mercuryworkshop/proxy-transports@1.0.2': {}
 
   '@mercuryworkshop/scramjet-controller@0.0.9(patch_hash=4c95b53bc7ca0be5de98676201fd69a6358481cca1caa8d823a63f11ad9d9f85)':
@@ -956,6 +950,8 @@ snapshots:
 
   '@unocss/reset@66.6.7': {}
 
+  '@zip.js/zip.js@2.8.23': {}
+
   acorn@8.16.0: {}
 
   aria-query@5.3.1: {}
@@ -1049,8 +1045,6 @@ snapshots:
       '@types/estree': 1.0.8
 
   is-regexp@3.1.0: {}
-
-  libcurl.js@0.7.4: {}
 
   lightningcss-android-arm64@1.32.0:
     optional: true
