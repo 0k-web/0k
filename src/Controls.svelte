@@ -39,7 +39,20 @@
     value={url}
     onkeypress={(e) => {
       if (e.key == 'Enter') {
-        go(e.currentTarget.value);
+        let url = e.currentTarget.value.trim();
+
+        const hasScheme = /^[a-zA-Z][a-zA-Z\d+\-.]*:/.test(url);
+        if (!hasScheme) {
+          if (/\s/.test(url)) {
+            url = `https://duckduckgo.com/?q=${encodeURIComponent(url)}`;
+          } else if (url.includes('.')) {
+            url = `https://${url}`;
+          } else {
+            url = `https://duckduckgo.com/?q=${encodeURIComponent(url)}`;
+          }
+        }
+
+        go(url);
       }
     }}
   />
