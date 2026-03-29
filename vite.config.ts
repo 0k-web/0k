@@ -17,22 +17,27 @@ const webAssets = (): Plugin => {
   };
 
   const assetMap = new Map<string, string>();
+  let base = '/';
 
   function replaceAssets(content: string): string {
     return content.replace(/WEB_ASSET\(([^)]+)\)/g, (_, filename) => {
-      const hashedUrl = assetMap.get(filename);
-      if (!hashedUrl) {
+      const assetUrl = assetMap.get(filename);
+      if (!assetUrl) {
         throw new Error(
           `WEB_ASSET: Could not find asset "${filename}". Available assets: ${Array.from(assetMap.keys()).join(', ')}`,
         );
       }
-      return `/${hashedUrl}`;
+      return assetUrl;
     });
   }
 
   return {
     name: 'web-assets',
     enforce: 'pre',
+
+    configResolved(resolvedConfig) {
+      base = resolvedConfig.base;
+    },
 
     async generateBundle(_, bundle) {
       await Promise.all(
@@ -48,7 +53,10 @@ const webAssets = (): Plugin => {
           });
 
           const finalName = this.getFileName(hashedName);
-          assetMap.set(assetName, finalName);
+          assetMap.set(
+            assetName,
+            `${base.endsWith('/') ? base : `${base}/`}${finalName}`,
+          );
         }),
       );
 
