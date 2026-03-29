@@ -57,10 +57,7 @@ There's a trend to use static hosting on shared domains, but still tunnel throug
 
 These tunnels cost money, effort, and could be blocked if filters started respecting the PSL or detecting AI-generated placeholders.
 
-Everybody has a personal device.  
-Everybody can reach Google AMP.  
-Therefore, 0K's tunnels run over personal devices, with handshakes over AMP.  
-So 0K is 100% shared domains.
+If 0K can reach shared domains, it can reach the internet: reaching a CDN = reaching GitHub websites, and reaching Google AMP = reaching through a tunnel to the rest of the internet.
 
 ## Credits
 
