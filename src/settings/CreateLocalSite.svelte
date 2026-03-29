@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { BlobReader, BlobWriter, ZipReader, type FileEntry } from '@zip.js/zip.js';
+  import { BlobReader, BlobWriter, ZipReader, type FileEntry } from '@zip.js/zip.js/lib/zip-core.js';
   import { guessContentType, htmlContentType } from '../contentTypes';
 
   const escapeHtml = (value: string) =>
