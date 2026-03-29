@@ -1,9 +1,12 @@
 <script lang="ts" module>
   import scramjetController from '@mercuryworkshop/scramjet-controller/dist/controller.api.js';
   const { Controller, config } = scramjetController;
-  config.injectPath = 'WEB_ASSET(controller.inject.js)';
-  config.scramjetPath = 'WEB_ASSET(scramjet.js)';
-  config.wasmPath = 'WEB_ASSET(scramjet.wasm)';
+
+  const webAsset = (asset: string) => new URL(asset, import.meta.url).href;
+
+  config.injectPath = webAsset('WEB_ASSET(controller.inject.js)');
+  config.scramjetPath = webAsset('WEB_ASSET(scramjet.js)');
+  config.wasmPath = webAsset('WEB_ASSET(scramjet.wasm)');
 
   let _go: ((url: string) => void) | undefined = $state();
   export const getGo = () => _go;
