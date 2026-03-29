@@ -17,7 +17,7 @@
   import { ZeroKTransport } from './transport';
 
   const upsertServiceWorker = async () => {
-    const registration = await navigator.serviceWorker.register('/sw.js');
+    const registration = await navigator.serviceWorker.register(new URL('./sw.js', location.href));
     await navigator.serviceWorker.ready;
 
     const sw = navigator.serviceWorker.controller || registration.active;
