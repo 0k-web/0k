@@ -2,22 +2,33 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
 import { build as rolldownBuild } from 'rolldown';
-import { defineConfig } from 'vite';
+import { defineConfig, loadEnv } from 'vite';
 import { svelte } from '@sveltejs/vite-plugin-svelte';
 import { viteSingleFile } from 'vite-plugin-singlefile';
 
 import type { Plugin, ResolvedConfig } from 'vite';
 
-const webAssets = (): Plugin => {
-  const assets = {
-    'scramjet.js': 'node_modules/@mercuryworkshop/scramjet/dist/scramjet.js',
-    'scramjet.wasm': 'node_modules/@mercuryworkshop/scramjet/dist/scramjet.wasm',
-    'controller.inject.js':
-      'node_modules/@mercuryworkshop/scramjet-controller/dist/controller.inject.js',
-  };
+const assets = [
+  {
+    name: 'scramjet.js',
+    src: 'node_modules/@mercuryworkshop/scramjet/dist/scramjet.js',
+    cdn: 'https://cdn.jsdelivr.net/npm/@mercuryworkshop/scramjet@2.0.2-alpha/dist/scramjet.js',
+  },
+  {
+    name: 'scramjet.wasm',
+    src: 'node_modules/@mercuryworkshop/scramjet/dist/scramjet.wasm',
+    cdn: 'https://cdn.jsdelivr.net/npm/@mercuryworkshop/scramjet@2.0.2-alpha/dist/scramjet.wasm',
+  },
+  {
+    name: 'controller.inject.js',
+    src: 'node_modules/@mercuryworkshop/scramjet-controller/dist/controller.inject.js',
+    cdn: 'https://cdn.jsdelivr.net/npm/@mercuryworkshop/scramjet-controller@0.0.9/dist/controller.inject.js',
+  },
+] as const;
 
+const webAssets = (): Plugin => {
   const assetMap = new Map<string, string>();
-  let base = '/';
+  let useJsdelivr = false;
 
   function replaceAssets(content: string): string {
     return content.replace(/WEB_ASSET\(([^)]+)\)/g, (_, filename) => {
@@ -33,40 +44,29 @@ const webAssets = (): Plugin => {
 
   return {
     name: 'web-assets',
-    enforce: 'pre',
+    apply: 'build',
 
-    configResolved(resolvedConfig) {
-      base = resolvedConfig.base;
+    config(_, { mode }) {
+      useJsdelivr = Boolean(loadEnv(mode, process.cwd(), '').SCRAMJET_USE_JSDELIVR);
     },
 
     async generateBundle(_, bundle) {
-      await Promise.all(
-        Object.entries(assets).map(async ([assetName, assetPath]) => {
-          const content = assetName.endsWith('.js')
-            ? readFileSync(assetPath, 'utf-8')
-            : readFileSync(assetPath);
+      assetMap.clear();
+      assets.forEach((asset) => {
+        const assetUrl = useJsdelivr
+          ? asset.cdn
+          : `./${this.getFileName(
+              this.emitFile({
+                type: 'asset',
+                name: asset.name,
+                source: readFileSync(asset.src),
+              }),
+            )}`;
 
-          const hashedName = this.emitFile({
-            type: 'asset',
-            name: assetName,
-            source: content,
-          });
-
-          const finalName = this.getFileName(hashedName);
-          assetMap.set(
-            assetName,
-            `${base.endsWith('/') ? base : `${base}/`}${finalName}`,
-          );
-        }),
-      );
+        assetMap.set(asset.name, assetUrl);
+      });
 
       Object.values(bundle).forEach((chunk) => {
-        if (chunk.type == 'asset' && typeof chunk.source == 'string') {
-          if (chunk.source.includes('WEB_ASSET(')) {
-            chunk.source = replaceAssets(chunk.source);
-          }
-        }
-
         if (chunk.type == 'chunk' && chunk.code.includes('WEB_ASSET(')) {
           chunk.code = replaceAssets(chunk.code);
         }

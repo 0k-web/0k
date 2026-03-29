@@ -29,11 +29,17 @@ jobs:
       - name: Install
         run: pnpm install --frozen-lockfile
 
-      - name: Build
+      - name: Build main
+        run: SCRAMJET_USE_JSDELIVR=1 pnpm build
+
+      - name: Zip main
+        run: cd dist && zip -r ../0K.zip .
+
+      - name: Build selfhosting
         run: pnpm build
 
-      - name: Zip artifacts
-        run: cd dist && zip -r ../0K.zip .
+      - name: Zip selfhosting
+        run: cd dist && zip -r ../0K-advanced-selfhosting.zip .
 
       - name: Release
         env:
@@ -51,4 +57,5 @@ jobs:
             --latest \
             --title "$TAG" \
             --notes-file .github/latest-release-notes.md \
-            0K.zip#0K.zip
+            0K.zip \
+            0K-advanced-selfhosting.zip
