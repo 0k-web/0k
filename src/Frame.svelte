@@ -4,6 +4,7 @@
 
   const webAsset = (asset: string) => new URL(asset, document.baseURI).href;
 
+  config.prefix = new URL('./web/', document.baseURI).pathname;
   config.injectPath = webAsset('WEB_ASSET(controller.inject.js)');
   config.scramjetPath = webAsset('WEB_ASSET(scramjet.js)');
   config.wasmPath = webAsset('WEB_ASSET(scramjet.wasm)');
