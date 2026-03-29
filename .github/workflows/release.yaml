@@ -36,13 +36,16 @@ jobs:
         run: cd dist && zip -r ../0k.zip .
 
       - name: Release
-        uses: ncipollo/release-action@v1
-        with:
-          tag: latest
-          name: Continuous Release
-          body: |
-            This is 0K, commit ${{ github.sha }}.
-
-            0K can be hosted on any static hosting service, from CodeHS and Techsmart, to Google Cloud Storage and S3, Firebase Hosting and Render Static, or even pages.gay and IPFS.
-          artifacts: '0k.zip'
-          replacesArtifacts: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: latest
+        run: |
+          gh release delete "$TAG" --cleanup-tag -y || true
+          gh api -X DELETE "repos/$GITHUB_REPOSITORY/git/refs/tags/$TAG" || true
+          gh api "repos/$GITHUB_REPOSITORY/git/refs" \
+            -f ref="refs/tags/$TAG" \
+            -f sha="$GITHUB_SHA"
+          gh release create "$TAG" \
+            --title "latest" \
+            --latest \
+            --notes-file .github/latest-release-notes.md
