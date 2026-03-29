@@ -36,10 +36,14 @@ jobs:
         run: zip -r 0k.zip dist/
 
       - name: Release
-        uses: marvinpinto/action-automatic-releases@latest
+        uses: ncipollo/release-action@v1
         with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          automatic_release_tag: latest
-          prerelease: true
-          title: Continuous Release
-          files: 0k.zip
+          allowUpdates: true
+          tag: latest
+          name: Continuous Release
+          body: |
+            This is 0K, commit ${{ github.sha }}.
+
+            0K can be hosted on any static hosting service, from CodeHS and Techsmart, to Google Cloud Storage and S3, Firebase Hosting and Render Static, or even pages.gay and IPFS.
+          artifacts: '0k.zip'
+          replacesArtifacts: true
