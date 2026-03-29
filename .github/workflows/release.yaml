@@ -33,7 +33,7 @@ jobs:
         run: pnpm build
 
       - name: Zip artifacts
-        run: cd dist && zip -r ../0k.zip .
+        run: cd dist && zip -r ../0K.zip .
 
       - name: Release
         env:
@@ -50,4 +50,5 @@ jobs:
             --verify-tag \
             --latest \
             --title "$TAG" \
-            --notes-file .github/latest-release-notes.md
+            --notes-file .github/latest-release-notes.md \
+            0K.zip#0K.zip
