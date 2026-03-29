@@ -11,6 +11,9 @@
     "format": "pnpm --filter \"@0k/web\" format"
   },
   "devDependencies": {
+    "@types/node": "^24.12.0",
+    "prettier": "^3.8.1",
+    "prettier-plugin-svelte": "^3.5.1",
     "typescript": "~5.9.3"
   }
 }
