@@ -4,6 +4,8 @@
 
 It does all of this at absolute zero: 0K is distributed in static, frozen form.
 
+This repo is now a pnpm workspace. The current web app lives in `apps/web`, and the workspace is ready for `packages/*` and `crates/*` too.
+
 ## Using sites from the web
 
 0K needs you to run your own tunnel to access the rest of the internet. Don't worry - it's easy, and it's what makes 0K free and reliable.

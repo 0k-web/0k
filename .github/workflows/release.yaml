@@ -42,8 +42,8 @@ jobs:
       - name: Copy jsDelivr SVG
         run: |
           mkdir -p builds-repo/jsdelivr
-          cp dist/index.svg builds-repo/jsdelivr/index.svg
-          cp dist/sw.js builds-repo/jsdelivr/sw.js
+          cp apps/web/dist/index.svg builds-repo/jsdelivr/index.svg
+          cp apps/web/dist/sw.js builds-repo/jsdelivr/sw.js
 
       - name: Build Statically SVG
         run: ZERO_K_CDN=statically ZERO_K_DEFAULT_GITHUB_BEHAVIOR=statically ZERO_K_INDEX_FORMAT=svg pnpm build
@@ -51,8 +51,8 @@ jobs:
       - name: Copy Statically SVG
         run: |
           mkdir -p builds-repo/statically
-          cp dist/index.svg builds-repo/statically/index.svg
-          cp dist/sw.js builds-repo/statically/sw.js
+          cp apps/web/dist/index.svg builds-repo/statically/index.svg
+          cp apps/web/dist/sw.js builds-repo/statically/sw.js
 
       - name: Push builds repo
         working-directory: builds-repo
@@ -71,19 +71,22 @@ jobs:
         run: ZERO_K_CDN=jsdelivr ZERO_K_DEFAULT_GITHUB_BEHAVIOR=jsdelivr pnpm build
 
       - name: Zip 0K.zip
-        run: cd dist && zip -r ../0K.zip .
+        working-directory: apps/web/dist
+        run: zip -r ../../../0K.zip .
 
       - name: Build 0K_advanced_statically.zip
         run: ZERO_K_CDN=statically ZERO_K_DEFAULT_GITHUB_BEHAVIOR=statically pnpm build
 
       - name: Zip 0K_advanced_statically.zip
-        run: cd dist && zip -r ../0K_advanced_statically.zip .
+        working-directory: apps/web/dist
+        run: zip -r ../../../0K_advanced_statically.zip .
 
       - name: Build 0K_advanced_selfhosting.zip
         run: pnpm build
 
       - name: Zip 0K_advanced_selfhosting.zip
-        run: cd dist && zip -r ../0K_advanced_selfhosting.zip .
+        working-directory: apps/web/dist
+        run: zip -r ../../../0K_advanced_selfhosting.zip .
 
       - name: Release
         env:

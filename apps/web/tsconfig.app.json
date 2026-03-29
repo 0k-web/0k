@@ -1,10 +1,8 @@
 {
-  "extends": "@tsconfig/svelte/tsconfig.json",
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
-    "target": "ES2023",
-    "useDefineForClassFields": true,
-    "module": "ESNext",
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
     "types": ["svelte", "vite/client"],
     "noEmit": true,
     /**
@@ -14,8 +12,7 @@
      * of JS in `.svelte` files.
      */
     "allowJs": true,
-    "checkJs": true,
-    "moduleDetection": "force"
+    "checkJs": true
   },
   "include": ["+sw.ts", "src/**/*.ts", "src/**/*.js", "src/**/*.svelte"]
 }

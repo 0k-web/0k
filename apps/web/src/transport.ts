@@ -18,22 +18,26 @@ export class ZeroKTransport implements ProxyTransport {
   ready = true;
   async init() {}
   connect(
-    url: URL,
-    protocols: string[],
-    requestHeaders: RawHeaders,
-    onopen: (protocol: string, extensions: string) => void,
-    onmessage: (data: WebSocketDataType) => void,
-    onclose: (code: number, reason: string) => void,
+    _url: URL,
+    _protocols: string[],
+    _requestHeaders: RawHeaders,
+    _onopen: (protocol: string, extensions: string) => void,
+    _onmessage: (data: WebSocketDataType) => void,
+    _onclose: (code: number, reason: string) => void,
     onerror: (error: string) => void,
-  ) {
-    throw new Error('Not implemented');
+  ): [(data: WebSocketDataType) => void, (code: number, reason: string) => void] {
+    queueMicrotask(() => {
+      onerror('WebSocket transport is not implemented in ZeroKTransport');
+    });
+
+    return [() => {}, () => {}];
   }
   async request(
     remote: URL,
     method: string,
-    body: BodyInit | null,
-    headers: RawHeaders,
-    signal: AbortSignal | undefined,
+    _body: BodyInit | null,
+    _headers: RawHeaders,
+    _signal: AbortSignal | undefined,
   ): Promise<TransferrableResponse> {
     const githubBehavior = normalizeGitHubBehavior(
       localStorage[keyGitHubBehavior],

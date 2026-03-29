@@ -4,29 +4,13 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview",
-    "check": "svelte-check --tsconfig ./tsconfig.app.json && tsc -p tsconfig.node.json",
-    "format": "prettier . --write"
+    "dev": "pnpm --filter \"@0k/web\" dev",
+    "build": "pnpm --filter \"@0k/web\" build",
+    "preview": "pnpm --filter \"@0k/web\" preview",
+    "check": "pnpm --filter \"@0k/web\" check",
+    "format": "pnpm --filter \"@0k/web\" format"
   },
   "devDependencies": {
-    "@mercuryworkshop/proxy-transports": "^1.0.2",
-    "@mercuryworkshop/scramjet": "2.0.2-alpha",
-    "@mercuryworkshop/scramjet-controller": "^0.0.9",
-    "@sveltejs/vite-plugin-svelte": "^7.0.0",
-    "@tsconfig/svelte": "^5.0.8",
-    "@types/node": "^24.12.0",
-    "@unocss/reset": "^66.6.7",
-    "@zip.js/zip.js": "^2.8.23",
-    "node-html-parser": "^7.1.0",
-    "prettier": "^3.8.1",
-    "prettier-plugin-svelte": "^3.5.1",
-    "rolldown": "1.0.0-rc.12",
-    "svelte": "^5.53.12",
-    "svelte-check": "^4.4.5",
-    "typescript": "~5.9.3",
-    "vite": "^8.0.1",
-    "vite-plugin-singlefile": "^2.3.2"
+    "typescript": "~5.9.3"
   }
 }
