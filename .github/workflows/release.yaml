@@ -40,12 +40,14 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           TAG: latest
         run: |
-          gh release delete "$TAG" --cleanup-tag -y || true
+          gh release delete "$TAG" -y || true
           gh api -X DELETE "repos/$GITHUB_REPOSITORY/git/refs/tags/$TAG" || true
-          gh api "repos/$GITHUB_REPOSITORY/git/refs" \
+          gh api -X POST "repos/$GITHUB_REPOSITORY/git/refs" \
             -f ref="refs/tags/$TAG" \
             -f sha="$GITHUB_SHA"
+
           gh release create "$TAG" \
-            --title "latest" \
+            --verify-tag \
             --latest \
+            --title "$TAG" \
             --notes-file .github/latest-release-notes.md
