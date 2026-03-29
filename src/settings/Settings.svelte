@@ -1,5 +1,6 @@
 <script lang="ts">
   import CreateLocalSite from './CreateLocalSite.svelte';
+  import { githubBehaviorOptions, normalizeGitHubBehavior } from '../githubBehavior';
   import { keyGitHubBehavior } from './settingsLocalStorage';
 
   let { close }: { close: () => void } = $props();
@@ -9,6 +10,12 @@
   updateCaches();
 
   let localSiteOpen = $state(false);
+
+  const getGitHubBehavior = () =>
+    normalizeGitHubBehavior(localStorage[keyGitHubBehavior], defaultGitHubBehavior);
+  const setGitHubBehavior = (value: string) => {
+    localStorage[keyGitHubBehavior] = normalizeGitHubBehavior(value, defaultGitHubBehavior);
+  };
 </script>
 
 <dialog
@@ -20,15 +27,10 @@
 >
   <label class="split">
     <p>Reroute <code>github.io</code></p>
-    <select
-      bind:value={
-        () => localStorage[keyGitHubBehavior] || 'githubusercontent',
-        (v) => (localStorage[keyGitHubBehavior] = v)
-      }
-    >
-      <option value="githubusercontent">Via raw.githubusercontent.com</option>
-      <option value="jsdelivr">Via cdn.jsdelivr.net</option>
-      <option value="off">Off</option>
+    <select bind:value={() => getGitHubBehavior(), (value) => setGitHubBehavior(value)}>
+      {#each githubBehaviorOptions as option}
+        <option value={option.value}>{option.label}</option>
+      {/each}
     </select>
   </label>
   <div class="split">

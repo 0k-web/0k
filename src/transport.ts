@@ -3,11 +3,16 @@ import type {
   RawHeaders,
   WebSocketDataType,
   TransferrableResponse,
-  FetchBodyType,
 } from '@mercuryworkshop/proxy-transports';
-import { keyGitHubBehavior } from './settings/settingsLocalStorage';
+import { normalizeGitHubBehavior } from './githubBehavior';
 import { loadGitHubIo, loadHome, loadNotKnown, loadPassthrough } from './transport-logic-basic';
-import { rawGithubusercontentCom, cdnJsdelivrNet, makeBody } from './transport-logic+';
+import {
+  rawGithubusercontentCom,
+  cdnJsdelivrNet,
+  cdnStaticallyIo,
+  makeBody,
+} from './transport-logic+';
+import { keyGitHubBehavior } from './settings/settingsLocalStorage';
 
 export class ZeroKTransport implements ProxyTransport {
   ready = true;
@@ -30,7 +35,18 @@ export class ZeroKTransport implements ProxyTransport {
     headers: RawHeaders,
     signal: AbortSignal | undefined,
   ): Promise<TransferrableResponse> {
-    const githubBehavior = localStorage[keyGitHubBehavior] || 'githubusercontent';
+    const githubBehavior = normalizeGitHubBehavior(
+      localStorage[keyGitHubBehavior],
+      defaultGitHubBehavior,
+    );
+    const githubUrlFn =
+      githubBehavior == 'githubusercontent'
+        ? rawGithubusercontentCom
+        : githubBehavior == 'jsdelivr'
+          ? cdnJsdelivrNet
+          : githubBehavior == 'statically'
+            ? cdnStaticallyIo
+            : undefined;
 
     const isHome = method == 'GET' && remote.href == 'https://home.0k/';
     const isLocalSite = method == 'GET' && remote.host.endsWith('.0k');
@@ -61,18 +77,12 @@ export class ZeroKTransport implements ProxyTransport {
       return await loadPassthrough(remote.href);
     }
 
-    if (isGithubIo && githubBehavior == 'githubusercontent') {
-      return await loadGitHubIo(remote.host, remote.pathname, rawGithubusercontentCom);
-    }
-    if (isGithubIo && githubBehavior == 'jsdelivr') {
-      return await loadGitHubIo(remote.host, remote.pathname, cdnJsdelivrNet);
+    if (isGithubIo && githubUrlFn) {
+      return await loadGitHubIo(remote.host, remote.pathname, githubUrlFn);
     }
 
-    if (matchGithubRaw && githubBehavior == 'githubusercontent') {
-      return await loadPassthrough(rawGithubusercontentCom(matchGithubRaw[1], matchGithubRaw[2]));
-    }
-    if (matchGithubRaw && githubBehavior == 'jsdelivr') {
-      return await loadPassthrough(cdnJsdelivrNet(matchGithubRaw[1], matchGithubRaw[2]));
+    if (matchGithubRaw && githubUrlFn) {
+      return await loadPassthrough(githubUrlFn(matchGithubRaw[1], matchGithubRaw[2]));
     }
 
     return loadNotKnown();

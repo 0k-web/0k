@@ -1,2 +1,3 @@
 patchedDependencies:
   '@mercuryworkshop/scramjet-controller': patches/@mercuryworkshop__scramjet-controller.patch
+  '@zip.js/zip.js': patches/@zip.js__zip.js.patch

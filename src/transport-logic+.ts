@@ -12,6 +12,8 @@ export const makeBody = (
   body,
 });
 export const rawGithubusercontentCom = (repo: string, refAndPath: string) =>
-  `https://raw.githubusercontent.com/${repo}/refs/heads/${refAndPath}`;
+  `https://raw.githubusercontent.com/${repo}/${refAndPath}`;
 export const cdnJsdelivrNet = (repo: string, refAndPath: string) =>
   `https://cdn.jsdelivr.net/gh/${repo}@${refAndPath}`;
+export const cdnStaticallyIo = (repo: string, refAndPath: string) =>
+  `https://cdn.statically.io/gh/${repo}@${refAndPath}`;

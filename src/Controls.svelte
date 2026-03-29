@@ -30,33 +30,35 @@
   let urlIndex = $derived(history.indexOf(url));
 </script>
 
-<div class="controls" class:force-expand={url == 'https://home.0k/'}>
-  <input
-    type="url"
-    autocomplete="off"
-    spellcheck="false"
-    placeholder="URL"
-    value={url}
-    onkeypress={(e) => {
-      if (e.key == 'Enter') {
-        let url = e.currentTarget.value.trim();
+<div class="hover-anchor" class:force-expand={url == 'https://home.0k/'}>
+  <div class="controls">
+    <input
+      type="url"
+      autocomplete="off"
+      spellcheck="false"
+      placeholder="URL"
+      value={url}
+      onkeypress={(e) => {
+        if (e.key == 'Enter') {
+          let url = e.currentTarget.value.trim();
 
-        const hasScheme = /^[a-zA-Z][a-zA-Z\d+\-.]*:/.test(url);
-        if (!hasScheme) {
-          if (/\s/.test(url)) {
-            url = `https://duckduckgo.com/?q=${encodeURIComponent(url)}`;
-          } else if (url.includes('.')) {
-            url = `https://${url}`;
-          } else {
-            url = `https://duckduckgo.com/?q=${encodeURIComponent(url)}`;
+          const hasScheme = /^[a-zA-Z][a-zA-Z\d+\-.]*:/.test(url);
+          if (!hasScheme) {
+            if (/\s/.test(url)) {
+              url = `https://duckduckgo.com/?q=${encodeURIComponent(url)}`;
+            } else if (url.includes('.')) {
+              url = `https://${url}`;
+            } else {
+              url = `https://duckduckgo.com/?q=${encodeURIComponent(url)}`;
+            }
           }
-        }
 
-        go(url);
-      }
-    }}
-  />
-  <div class="history" popover="manual" {@attach (node) => node.showPopover()}>
+          go(url);
+        }
+      }}
+    />
+  </div>
+  <div class="history">
     {#each history as entry, i}
       {@const entryURL = new URL(entry)}
       {@const entrySimple =
@@ -73,21 +75,21 @@
       >
         {entrySimple.length > 80 ? `${entrySimple.slice(0, 80)}...` : entrySimple}
         {#if i == urlIndex}
-          <svg width="20" height="20" viewBox="0 0 24 24"
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
             ><path
               fill="currentColor"
               d="M12 20q-3.35 0-5.675-2.325T4 12t2.325-5.675T12 4q1.725 0 3.3.712T18 6.75V5q0-.425.288-.712T19 4t.713.288T20 5v5q0 .425-.288.713T19 11h-5q-.425 0-.712-.288T13 10t.288-.712T14 9h3.2q-.8-1.4-2.187-2.2T12 6Q9.5 6 7.75 7.75T6 12t1.75 4.25T12 18q1.7 0 3.113-.862t2.187-2.313q.2-.35.563-.487t.737-.013q.4.125.575.525t-.025.75q-1.025 2-2.925 3.2T12 20"
             /></svg
           >
         {:else if i < urlIndex}
-          <svg width="20" height="20" viewBox="0 0 24 24"
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
             ><path
               fill="currentColor"
               d="m7.825 13l4.9 4.9q.3.3.288.7t-.313.7q-.3.275-.7.288t-.7-.288l-6.6-6.6q-.15-.15-.213-.325T4.426 12t.063-.375t.212-.325l6.6-6.6q.275-.275.688-.275t.712.275q.3.3.3.713t-.3.712L7.825 11H19q.425 0 .713.288T20 12t-.288.713T19 13z"
             /></svg
           >
         {:else}
-          <svg width="20" height="20" viewBox="0 0 24 24"
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
             ><path
               fill="currentColor"
               d="M16.175 13H5q-.425 0-.712-.288T4 12t.288-.712T5 11h11.175l-4.9-4.9q-.3-.3-.288-.7t.313-.7q.3-.275.7-.288t.7.288l6.6 6.6q.15.15.213.325t.062.375t-.062.375t-.213.325l-6.6 6.6q-.275.275-.687.275T11.3 19.3q-.3-.3-.3-.712t.3-.713z"
@@ -100,25 +102,8 @@
 </div>
 
 <style>
-  .controls {
-    position: fixed;
-    bottom: 0;
-    left: 50%;
-    translate: -50% 0;
-    min-width: 1rem;
-    height: 2rem;
-    border-start-start-radius: 0.5rem;
-    border-start-end-radius: 0.5rem;
-
-    display: flex;
-    background-color: var(--m3c-surface-container-low);
-    transition:
-      height var(--transition),
-      border-radius var(--transition);
-
-    overflow: hidden;
-    anchor-name: --controls;
-
+  .hover-anchor {
+    display: contents;
     --transition: linear(
         0,
         0.01 3.2%,
@@ -143,6 +128,25 @@
       )
       400ms;
   }
+  .controls {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    translate: -50% 0;
+    min-width: 1rem;
+    height: 2rem;
+    border-start-start-radius: 0.5rem;
+    border-start-end-radius: 0.5rem;
+
+    display: flex;
+    background-color: var(--m3c-surface-container-low);
+    transition:
+      height var(--transition),
+      border-radius var(--transition);
+
+    overflow: hidden;
+    anchor-name: --controls;
+  }
   .controls::after {
     position: absolute;
     left: 50%;
@@ -163,22 +167,22 @@
       visibility allow-discrete var(--transition);
   }
 
-  .controls:not(:hover, :focus-within, .force-expand) {
+  .hover-anchor:not(:hover, :focus-within, .force-expand) > .controls {
     height: 0.5rem;
     border-start-start-radius: 0.25rem;
     border-start-end-radius: 0.25rem;
   }
-  .controls:is(:hover, :focus-within, .force-expand)::after {
+  .hover-anchor:is(:hover, :focus-within, .force-expand) > .controls::after {
     translate: -50% -200%;
     opacity: 0;
     visibility: hidden;
   }
-  .controls:not(:hover, :focus-within, .force-expand) > input {
+  .hover-anchor:not(:hover, :focus-within, .force-expand) > .controls > input {
     width: 0;
     padding-inline: 0;
     visibility: hidden;
   }
-  .controls:not(:hover, :focus-within, .force-expand) > .history {
+  .hover-anchor:not(:hover, :focus-within, .force-expand) > .history {
     width: 0;
     height: 0;
     visibility: hidden;

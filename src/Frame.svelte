@@ -2,7 +2,7 @@
   import scramjetController from '@mercuryworkshop/scramjet-controller/dist/controller.api.js';
   const { Controller, config } = scramjetController;
 
-  const webAsset = (asset: string) => new URL(asset, import.meta.url).href;
+  const webAsset = (asset: string) => new URL(asset, document.baseURI).href;
 
   config.injectPath = webAsset('WEB_ASSET(controller.inject.js)');
   config.scramjetPath = webAsset('WEB_ASSET(scramjet.js)');
@@ -17,7 +17,9 @@
   import { ZeroKTransport } from './transport';
 
   const upsertServiceWorker = async () => {
-    const registration = await navigator.serviceWorker.register(new URL('./sw.js', location.href));
+    const registration = await navigator.serviceWorker.register(
+      new URL('./sw.js', document.baseURI),
+    );
     await navigator.serviceWorker.ready;
 
     const sw = navigator.serviceWorker.controller || registration.active;

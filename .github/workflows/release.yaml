@@ -15,6 +15,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Checkout builds repo
+        uses: actions/checkout@v4
+        with:
+          repository: 0k-web/builds
+          token: ${{ secrets.BUILDS_PAT }}
+          path: builds-repo
+
       - name: Set up pnpm
         uses: pnpm/action-setup@v4
         with:
@@ -29,17 +36,54 @@ jobs:
       - name: Install
         run: pnpm install --frozen-lockfile
 
-      - name: Build main
-        run: SCRAMJET_USE_JSDELIVR=1 pnpm build
+      - name: Build jsDelivr SVG
+        run: ZERO_K_CDN=jsdelivr ZERO_K_DEFAULT_GITHUB_BEHAVIOR=jsdelivr ZERO_K_INDEX_FORMAT=svg pnpm build
 
-      - name: Zip main
+      - name: Copy jsDelivr SVG
+        run: |
+          mkdir -p builds-repo/jsdelivr
+          cp dist/index.svg builds-repo/jsdelivr/index.svg
+          cp dist/sw.js builds-repo/jsdelivr/sw.js
+
+      - name: Build Statically SVG
+        run: ZERO_K_CDN=statically ZERO_K_DEFAULT_GITHUB_BEHAVIOR=statically ZERO_K_INDEX_FORMAT=svg pnpm build
+
+      - name: Copy Statically SVG
+        run: |
+          mkdir -p builds-repo/statically
+          cp dist/index.svg builds-repo/statically/index.svg
+          cp dist/sw.js builds-repo/statically/sw.js
+
+      - name: Push builds repo
+        working-directory: builds-repo
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add jsdelivr/index.svg jsdelivr/sw.js statically/index.svg statically/sw.js
+          if git diff --cached --quiet; then
+            echo "No published build changes"
+            exit 0
+          fi
+          git commit -m "Update published builds for ${GITHUB_SHA}"
+          git push
+
+      - name: Build 0K.zip
+        run: ZERO_K_CDN=jsdelivr ZERO_K_DEFAULT_GITHUB_BEHAVIOR=jsdelivr pnpm build
+
+      - name: Zip 0K.zip
         run: cd dist && zip -r ../0K.zip .
 
-      - name: Build selfhosting
+      - name: Build 0K_advanced_statically.zip
+        run: ZERO_K_CDN=statically ZERO_K_DEFAULT_GITHUB_BEHAVIOR=statically pnpm build
+
+      - name: Zip 0K_advanced_statically.zip
+        run: cd dist && zip -r ../0K_advanced_statically.zip .
+
+      - name: Build 0K_advanced_selfhosting.zip
         run: pnpm build
 
-      - name: Zip selfhosting
-        run: cd dist && zip -r ../0K-advanced-selfhosting.zip .
+      - name: Zip 0K_advanced_selfhosting.zip
+        run: cd dist && zip -r ../0K_advanced_selfhosting.zip .
 
       - name: Release
         env:
@@ -58,4 +102,5 @@ jobs:
             --title "$TAG" \
             --notes-file .github/latest-release-notes.md \
             0K.zip \
-            0K-advanced-selfhosting.zip
+            0K_advanced_statically.zip \
+            0K_advanced_selfhosting.zip

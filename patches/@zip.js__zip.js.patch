@@ -1,0 +1,23 @@
+diff --git a/package.json b/package.json
+index d933bdd7084357f0489e2fddba2ce4ca52df494e..014cf631e32d99ffe0e8dc8d7d3a5f06ed03c3fc 100644
+--- a/package.json
++++ b/package.json
+@@ -143,6 +143,18 @@
+         "types": "./index.d.ts",
+         "default": "./lib/zip-native.js"
+       }
++    },
++    "./lib/core/io.js": {
++      "import": {
++        "types": "./index.d.ts",
++        "default": "./lib/core/io.js"
++      }
++    },
++    "./lib/core/zip-reader.js": {
++      "import": {
++        "types": "./index.d.ts",
++        "default": "./lib/core/zip-reader.js"
++      }
+     }
+   },
+   "repository": {
