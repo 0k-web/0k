@@ -6,7 +6,7 @@ settings:
 
 patchedDependencies:
   '@mercuryworkshop/scramjet-controller':
-    hash: 4f5495e9a6a2a8299a79330bad2555ebbdf1937e0fb15b3cad1bc8665fa60fd2
+    hash: 96b402d14f47862da7e5026e65bc8e07417d0069a48997fb575e7efaf2fd23d7
     path: patches/@mercuryworkshop__scramjet-controller.patch
   '@zip.js/zip.js':
     hash: fc0f51fd76d9c12b878ca704c1fe27bad977d0578a03983c11724e6cd33dbab7
@@ -71,7 +71,7 @@ importers:
         version: 2.0.2-alpha
       '@mercuryworkshop/scramjet-controller':
         specifier: ^0.0.9
-        version: 0.0.9(patch_hash=4f5495e9a6a2a8299a79330bad2555ebbdf1937e0fb15b3cad1bc8665fa60fd2)
+        version: 0.0.9(patch_hash=96b402d14f47862da7e5026e65bc8e07417d0069a48997fb575e7efaf2fd23d7)
       '@sveltejs/vite-plugin-svelte':
         specifier: ^7.0.0
         version: 7.0.0(svelte@5.55.0)(vite@8.0.3)
@@ -2417,7 +2417,7 @@ snapshots:
 
   '@mercuryworkshop/proxy-transports@1.0.2': {}
 
-  '@mercuryworkshop/scramjet-controller@0.0.9(patch_hash=4f5495e9a6a2a8299a79330bad2555ebbdf1937e0fb15b3cad1bc8665fa60fd2)':
+  '@mercuryworkshop/scramjet-controller@0.0.9(patch_hash=96b402d14f47862da7e5026e65bc8e07417d0069a48997fb575e7efaf2fd23d7)':
     dependencies:
       '@mercuryworkshop/proxy-transports': 1.0.2
       '@mercuryworkshop/scramjet': 2.0.2-alpha
