@@ -4,7 +4,7 @@
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
     "lib": ["ES2023"],
     "types": ["node"],
-    "noEmit": true
+    "noEmit": true,
   },
-  "include": ["vite.config.ts", "vite-plugin-*.ts"]
+  "include": ["vite.config.ts", "vite-plugin-*.ts", "src/**/*.node.ts"],
 }
