@@ -98,7 +98,7 @@ export default defineConfig({
   },
   plugins: [
     svelte(),
-    webAssets(),
+    webAssets({ canExternalize: INDEX_FORMAT == 'html' }),
     viteSingleFile(),
     normalizeSingleFile(),
     INDEX_FORMAT == 'svg' ? emitIndexSvg() : undefined,
