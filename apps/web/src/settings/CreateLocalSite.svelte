@@ -51,10 +51,10 @@
   <title>${escapeHtml(title)}${pathLabel}</title>
   <style>
     :root {
-      color-scheme: light dark;
       font-family: system-ui, sans-serif;
-      background: Canvas;
-      color: CanvasText;
+      color-scheme: light dark;
+      background: light-dark(#daffec, #00120a);
+      color: light-dark(#003627, #daffec);
     }
     body {
       max-width: 48rem;
@@ -65,10 +65,6 @@
       margin: 0 0 0.5rem;
       font-size: 1.5rem;
     }
-    p {
-      margin: 0 0 1.5rem;
-      color: color-mix(in oklab, CanvasText 70%, Canvas 30%);
-    }
     ul {
       margin: 0;
       padding-left: 1.25rem;
@@ -77,7 +73,7 @@
       margin-top: 0.5rem;
     }
     a {
-      color: LinkText;
+      color: light-dark(#006940, #b1ffcd);
     }
   </style>
   <body>
@@ -108,7 +104,7 @@
 
   const create = async () => {
     const topLevelReader = new BlobReader(file!);
-    const zipReader = new ZipReader(topLevelReader);
+    const zipReader = new ZipReader(topLevelReader, { useWebWorkers: false });
     try {
       const entries = await zipReader.getEntries();
       const files = entries.filter((entry): entry is FileEntry => !entry.directory);
