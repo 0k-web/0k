@@ -74,12 +74,12 @@ jobs:
         working-directory: apps/web/dist
         run: zip -r ../../../0K.zip .
 
-      - name: Build 0K_advanced_statically.zip
+      - name: Build 0K_advanced_statically_io.zip
         run: ZERO_K_CDN=statically ZERO_K_DEFAULT_GITHUB_BEHAVIOR=statically pnpm build
 
-      - name: Zip 0K_advanced_statically.zip
+      - name: Zip 0K_advanced_statically_io.zip
         working-directory: apps/web/dist
-        run: zip -r ../../../0K_advanced_statically.zip .
+        run: zip -r ../../../0K_advanced_statically_io.zip .
 
       - name: Build 0K_advanced_selfhosting.zip
         run: pnpm build
@@ -105,5 +105,5 @@ jobs:
             --title "$TAG" \
             --notes-file .github/latest-release-notes.md \
             0K.zip \
-            0K_advanced_statically.zip \
+            0K_advanced_statically_io.zip \
             0K_advanced_selfhosting.zip
