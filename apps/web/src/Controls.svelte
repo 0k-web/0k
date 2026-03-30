@@ -3,7 +3,7 @@
 
   let { url, go }: { url: string; go: (url: string) => void } = $props();
 
-  const history: string[] = $state(['https://home.0k/', 'https://games-site.github.io/']);
+  const history: string[] = $state(['https://games-site.github.io/']);
   let oldUrl = '';
   const updateFirstLast = (url: string) => {
     if (history.includes(url)) {
@@ -30,7 +30,7 @@
   let urlIndex = $derived(history.indexOf(url));
 </script>
 
-<div class="hover-anchor" class:force-expand={url == 'https://home.0k/'}>
+<div class="hover-anchor" class:force-expand={!url}>
   <div class="controls">
     <input
       type="url"

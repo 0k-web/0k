@@ -36,7 +36,6 @@
   <div class="split">
     <p>Local sites</p>
     <div class="chips">
-      <div class="chip">home.0k</div>
       {#each cacheKeys
         .filter((k) => k.startsWith('0k-site/'))
         .map((k) => k.slice('0k-site/'.length)) as site}

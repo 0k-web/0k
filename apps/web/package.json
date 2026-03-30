@@ -10,6 +10,10 @@
     "check": "svelte-check --tsconfig ./tsconfig.app.json && tsc -p tsconfig.node.json",
     "format": "prettier . --write"
   },
+  "dependencies": {
+    "@0k/lib": "workspace:*",
+    "libcurl.js": "^0.7.4"
+  },
   "devDependencies": {
     "@mercuryworkshop/proxy-transports": "^1.0.2",
     "@mercuryworkshop/scramjet": "2.0.2-alpha",
@@ -17,7 +21,6 @@
     "@sveltejs/vite-plugin-svelte": "^7.0.0",
     "@unocss/reset": "^66.6.7",
     "@zip.js/zip.js": "^2.8.23",
-    "node-html-parser": "^7.1.0",
     "rolldown": "1.0.0-rc.12",
     "svelte": "^5.53.12",
     "svelte-check": "^4.4.5",

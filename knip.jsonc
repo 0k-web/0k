@@ -1,0 +1,15 @@
+{
+  "$schema": "https://unpkg.com/knip@5/schema-jsonc.json",
+  "ignore": ["apps/web/src/app.d.ts", "apps/web/src/libcurl.d.ts"],
+  "ignoreDependencies": ["cloudflare", "@mercuryworkshop/scramjet", "@unocss/reset"],
+  "workspaces": {
+    "apps/web": {
+      "vite": false,
+      "entry": ["src/main.ts", "+sw.ts", "vite.config.ts"],
+      "project": ["src/**/*.{ts,js,svelte}"],
+      "svelte": {
+        "entry": ["svelte.config.js"]
+      }
+    }
+  }
+}

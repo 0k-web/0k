@@ -1,6 +1,5 @@
 const GITHUB_BEHAVIOR_VALUES = ['githubusercontent', 'jsdelivr', 'statically', 'off'] as const;
-export const githubBehaviorValues = GITHUB_BEHAVIOR_VALUES;
-export type GitHubBehavior = (typeof githubBehaviorValues)[number];
+type GitHubBehavior = (typeof GITHUB_BEHAVIOR_VALUES)[number];
 
 const GITHUB_BEHAVIOR_LABELS: Record<GitHubBehavior, string> = {
   githubusercontent: 'Via raw.githubusercontent.com',

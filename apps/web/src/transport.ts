@@ -5,7 +5,7 @@ import type {
   TransferrableResponse,
 } from '@mercuryworkshop/proxy-transports';
 import { normalizeGitHubBehavior } from './githubBehavior';
-import { loadGitHubIo, loadHome, loadNotKnown, loadPassthrough } from './transport-logic-basic';
+import { loadGitHubIo, loadPassthrough } from './transport-logic-basic';
 import {
   rawGithubusercontentCom,
   cdnJsdelivrNet,
@@ -13,24 +13,24 @@ import {
   makeBody,
 } from './transport-logic+';
 import { keyGitHubBehavior } from './settings/settingsLocalStorage';
+import { connectOverWebRtc, initWebRtcTransport, requestOverWebRtc } from './webrtc';
 
 export class ZeroKTransport implements ProxyTransport {
-  ready = true;
-  async init() {}
+  ready = false;
+  async init() {
+    await initWebRtcTransport();
+    this.ready = true;
+  }
   connect(
-    _url: URL,
-    _protocols: string[],
-    _requestHeaders: RawHeaders,
-    _onopen: (protocol: string, extensions: string) => void,
-    _onmessage: (data: WebSocketDataType) => void,
-    _onclose: (code: number, reason: string) => void,
+    url: URL,
+    protocols: string[],
+    requestHeaders: RawHeaders,
+    onopen: (protocol: string, extensions: string) => void,
+    onmessage: (data: WebSocketDataType) => void,
+    onclose: (code: number, reason: string) => void,
     onerror: (error: string) => void,
   ): [(data: WebSocketDataType) => void, (code: number, reason: string) => void] {
-    queueMicrotask(() => {
-      onerror('WebSocket transport is not implemented in ZeroKTransport');
-    });
-
-    return [() => {}, () => {}];
+    return connectOverWebRtc(url, protocols, requestHeaders, onopen, onmessage, onclose, onerror);
   }
   async request(
     remote: URL,
@@ -52,7 +52,6 @@ export class ZeroKTransport implements ProxyTransport {
             ? cdnStaticallyIo
             : undefined;
 
-    const isHome = method == 'GET' && remote.href == 'https://home.0k/';
     const isLocalSite = method == 'GET' && remote.host.endsWith('.0k');
     const isPassthrough = method == 'GET' && remote.host == 'fonts.googleapis.com';
     const isGithubIo = method == 'GET' && remote.host.endsWith('.github.io');
@@ -61,9 +60,6 @@ export class ZeroKTransport implements ProxyTransport {
       remote.href.match(
         /^https:\/\/github\.com\/([a-zA-Z0-9-]+\/[a-zA-Z0-9-.]+)\/blob\/([a-zA-Z0-9-]+\/.+)?raw=true$/,
       );
-    if (isHome) {
-      return loadHome();
-    }
     if (isLocalSite) {
       const cacheName = `0k-site/${remote.host.replace('.0k', '')}`;
       const cacheExists = await caches.has(cacheName);
@@ -89,6 +85,16 @@ export class ZeroKTransport implements ProxyTransport {
       return await loadPassthrough(githubUrlFn(matchGithubRaw[1], matchGithubRaw[2]));
     }
 
-    return loadNotKnown();
+    try {
+      return await requestOverWebRtc(remote, method, _body, _headers, _signal);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      return makeBody(
+        502,
+        'Bad Gateway',
+        new Headers(),
+        `WebRTC tunnel request failed: ${message}`,
+      );
+    }
   }
 }

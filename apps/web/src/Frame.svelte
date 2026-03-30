@@ -14,8 +14,9 @@
 </script>
 
 <script lang="ts">
-  import loadingHome from './assets/loading-home.html?url&inline';
+  import home from './assets/home.html?url&inline';
   import { ZeroKTransport } from './transport';
+  import { primeWebRtc } from './webrtc';
 
   const upsertServiceWorker = async () => {
     const registration = await navigator.serviceWorker.register(
@@ -28,8 +29,7 @@
     return sw;
   };
 
-  let { urlchange, openSettings }: { urlchange: (url: string) => void; openSettings: () => void } =
-    $props();
+  let { urlchange }: { urlchange: (url: string) => void } = $props();
 
   let status = $state('0K is loading');
   const load = async (placeholder: HTMLDivElement) => {
@@ -38,6 +38,7 @@
 
     status = 'Initializing controls';
     const transport = new ZeroKTransport();
+    primeWebRtc();
     const controller = new Controller({
       serviceworker,
       transport,
@@ -48,27 +49,19 @@
 
     const frame = controller.createFrame();
     placeholder.replaceWith(frame.element);
-    frame.element.src = loadingHome;
+    frame.element.src = home;
 
     frame.element.addEventListener('load', () => {
+      if (frame.element.src == home) {
+        return;
+      }
       const url = globalThis.$scramjet.unrewriteUrl(
         frame.element.contentWindow!.location.href,
         frame.context,
       );
-      if (url == 'https://home.0k/') {
-        // @ts-expect-error window is untyped
-        frame.element.contentWindow!.openSettings = () => {
-          openSettings();
-        };
-        // @ts-expect-error window is untyped
-        frame.element.contentWindow!.openGitHub = () => {
-          open('https://github.com/0k-web/0k', '_blank');
-        };
-      }
       urlchange(url);
     });
     _go = (url) => frame.go(url);
-    frame.go('https://home.0k/');
   };
 </script>
 

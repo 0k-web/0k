@@ -1,0 +1,17 @@
+{
+  "name": "@0k/server",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "start": "deno run -A index.ts",
+    "check": "deno check index.ts",
+    "compile": "deno compile --allow-env --allow-net --output build/0k-server index.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^24.12.0"
+  },
+  "dependencies": {
+    "werift": "^0.22.2"
+  }
+}

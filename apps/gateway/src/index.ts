@@ -1,7 +1,55 @@
 import { DurableObject, env } from 'cloudflare:workers';
-import ampMagicBytes from './amp-magic-bytes';
+import {
+  ampMagicBytes,
+  isDomainRoom,
+  normalizeRoom,
+  roomFromProof,
+  sha256HexFromText,
+} from '@0k/lib';
 
 const textEncoder = new TextEncoder();
+
+function getRoomParam(url: URL) {
+  return normalizeRoom(url.searchParams.get('room') ?? url.searchParams.get('code') ?? '');
+}
+
+async function verifyHostProof(room: string, proof: string) {
+  if (!proof.trim()) {
+    return false;
+  }
+
+  if (!isDomainRoom(room)) {
+    return (await roomFromProof(proof)) === room;
+  }
+
+  const response = await fetch(new URL('/0k-hash', `https://${room}`), {
+    redirect: 'follow',
+  });
+  if (!response.ok) {
+    return false;
+  }
+
+  return (await response.text()).trim().toLowerCase() === (await sha256HexFromText(proof));
+}
+
+function requireRoom(room: string) {
+  if (!room) {
+    throw new Response('Must include room', { status: 400 });
+  }
+}
+
+async function requireHostProof(room: string, url: URL) {
+  requireRoom(room);
+
+  const proof = url.searchParams.get('proof') ?? '';
+  if (!proof) {
+    throw new Response('Must include proof', { status: 400 });
+  }
+
+  if (!(await verifyHostProof(room, proof))) {
+    throw new Response('Room proof did not verify', { status: 403 });
+  }
+}
 
 export class Room extends DurableObject<Env> {
   private directConnectionToHost: ReadableByteStreamController | undefined;
@@ -58,44 +106,62 @@ export class Room extends DurableObject<Env> {
 
 export default {
   async fetch(req): Promise<Response> {
-    const url = new URL(req.url);
-    const code = url.searchParams.get('code');
-    if (url.pathname == '/lookForOffers') {
-      if (req.method != 'GET') return new Response('Must GET', { status: 405 });
-      if (!code) return new Response('Must include code', { status: 400 });
+    try {
+      const url = new URL(req.url);
+      const room = getRoomParam(url);
 
-      const stub = env.ROOMS.getByName(code);
-      const stream = await stub.lookForOffers();
-      return new Response(stream, {
-        headers: {
-          'content-type': 'text/plain; charset=utf-8',
-        },
-      });
+      if (url.pathname === '/lookForOffers') {
+        if (req.method !== 'GET') {
+          throw new Response('Must GET', { status: 405 });
+        }
+        await requireHostProof(room, url);
+
+        const stub = env.ROOMS.getByName(room);
+        const stream = await stub.lookForOffers();
+        return new Response(stream, {
+          headers: {
+            'content-type': 'text/plain; charset=utf-8',
+          },
+        });
+      }
+
+      if (url.pathname === '/sendOffer') {
+        const offer = url.searchParams.get('offer');
+        requireRoom(room);
+        if (!offer) {
+          throw new Response('Must include offer', { status: 400 });
+        }
+
+        const stub = env.ROOMS.getByName(room);
+        const answer = await stub.sendOffer(offer);
+        const answerEncoded = new TextEncoder().encode(answer);
+        return new Response(
+          new Blob([ampMagicBytes, answerEncoded], { type: 'application/octet-stream' }),
+        );
+      }
+
+      if (url.pathname === '/acceptOffer') {
+        const offer = url.searchParams.get('offer');
+        const answer = url.searchParams.get('answer');
+        await requireHostProof(room, url);
+        if (!offer) {
+          throw new Response('Must include offer', { status: 400 });
+        }
+        if (!answer) {
+          throw new Response('Must include answer', { status: 400 });
+        }
+
+        const stub = env.ROOMS.getByName(room);
+        await stub.acceptOffer(offer, answer);
+        return new Response('OK');
+      }
+
+      return new Response('Not found', { status: 404 });
+    } catch (error) {
+      if (error instanceof Response) {
+        return error;
+      }
+      throw error;
     }
-    if (url.pathname == '/sendOffer') {
-      const offer = url.searchParams.get('offer');
-      if (!code) return new Response('Must include code', { status: 400 });
-      if (!offer) return new Response('Must include offer', { status: 400 });
-
-      const stub = env.ROOMS.getByName(code);
-      const answer = await stub.sendOffer(offer);
-      const answerEncoded = new TextEncoder().encode(answer);
-      return new Response(
-        new Blob([ampMagicBytes, answerEncoded], { type: 'application/octet-stream' }),
-      );
-    }
-    if (url.pathname == '/acceptOffer') {
-      const offer = url.searchParams.get('offer');
-      const answer = url.searchParams.get('answer');
-      if (!code) return new Response('Must include code', { status: 400 });
-      if (!offer) return new Response('Must include offer', { status: 400 });
-      if (!answer) return new Response('Must include answer', { status: 400 });
-
-      const stub = env.ROOMS.getByName(code);
-      await stub.acceptOffer(offer, answer);
-      return new Response('OK');
-    }
-
-    return new Response('Not found', { status: 404 });
   },
 } satisfies ExportedHandler<Env>;

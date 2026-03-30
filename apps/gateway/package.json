@@ -2,6 +2,9 @@
 	"name": "@0k/gateway",
 	"version": "0.0.0",
 	"private": true,
+	"dependencies": {
+		"@0k/lib": "workspace:*"
+	},
 	"scripts": {
 		"deploy": "wrangler deploy",
 		"dev": "wrangler dev",

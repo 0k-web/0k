@@ -1,4 +1,4 @@
-import type { GitHubBehavior } from './githubBehavior';
+type GitHubBehavior = 'githubusercontent' | 'jsdelivr' | 'statically' | 'off';
 
 declare global {
   var $scramjet: typeof import('@mercuryworkshop/scramjet');

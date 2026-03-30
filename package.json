@@ -7,11 +7,13 @@
     "dev": "pnpm --filter \"@0k/web\" dev",
     "build": "pnpm --filter \"@0k/web\" build",
     "preview": "pnpm --filter \"@0k/web\" preview",
+    "knip": "knip",
     "check": "pnpm --filter \"@0k/web\" check",
     "format": "pnpm --filter \"@0k/web\" format"
   },
   "devDependencies": {
     "@types/node": "^24.12.0",
+    "knip": "5.63.1",
     "prettier": "^3.8.1",
     "prettier-plugin-svelte": "^3.5.1",
     "typescript": "~5.9.3"

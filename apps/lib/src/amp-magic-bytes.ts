@@ -1,4 +1,4 @@
-export default new Uint8Array(
+export const ampMagicBytes = new Uint8Array(
   `00010000000a0080000300204f532f3269f96f2b0000013400000056636d
 6170000b00730000018c00000034676c796600000000000000ac00000001
 6865616427594c4f000000d400000036686865610d9f076e000001100000
@@ -18,5 +18,5 @@ export default new Uint8Array(
 0000000000000000`
     .replaceAll('\n', '')
     .match(/.{1,2}/g)!
-    .map((b) => parseInt(b, 16)),
+    .map((byte) => parseInt(byte, 16)),
 );
