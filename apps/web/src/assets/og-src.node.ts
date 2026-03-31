@@ -1,9 +1,11 @@
+// scripts/generate-og-svg.ts
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 
 type Theme = 'light' | 'dark';
 
 const SEED = 0x0f0f0f;
+const CELL = 12;
 
 const palette = {
   light: {
@@ -30,77 +32,87 @@ const hash = (x: number, y: number) => {
   return (s >>> 0) / 0x100000000;
 };
 
-function buildPixelField(theme: Theme, width: number, height: number) {
-  const { blossom } = palette[theme];
+function buildBlossomPath(width: number, height: number) {
+  const cols = Math.ceil(width / CELL);
+  const rows = Math.ceil(height / CELL);
 
-  // Bigger cells so the pattern reads clearly at OG size.
-  const cell = 12;
-  const cols = Math.ceil(width / cell);
-  const rows = Math.ceil(height / cell);
-
-  let out = '';
-
-  // Same origin as the original: bottom center.
   const originX = width / 2;
   const originY = height;
-
-  // Same general distance model as the original, but slightly widened
-  // so the blossom occupies more of the OG frame.
   const diag = Math.hypot(width / 2, height);
+
+  let d = '';
 
   for (let y = 0; y < rows; y++) {
     for (let x = 0; x < cols; x++) {
-      const px = (x + 0.5) * cell;
-      const py = (y + 0.5) * cell;
+      const px = (x + 0.5) * CELL;
+      const py = (y + 0.5) * CELL;
 
       const dx = px - originX;
       const dy = py - originY;
-      const d = Math.hypot(dx, dy);
-
-      // Original was roughly:
-      // chance = clamp(1.25 - (2 * d) / diag, 0, 1)
-      //
-      // This version keeps the same shape but expands it a bit so it
-      // fills more of a 1280x640 OG image.
-      const chance = clamp(1.32 - (1.72 * d) / diag, 0, 1);
+      const chance = clamp(1.4 - (2 * Math.hypot(dx, dy)) / diag, 0, 1);
 
       if (hash(x, y) < chance) {
-        out += `<rect x="${x * cell}" y="${y * cell}" width="${cell}" height="${cell}" fill="${blossom}" />`;
+        d += `M${x} ${y}h1v1h-1z`;
       }
     }
   }
 
-  return out;
+  return d;
 }
 
-function buildSvg(theme: Theme, width: number, height: number) {
-  const { surface } = palette[theme];
-  const pixels = buildPixelField(theme, width, height);
+function buildSvg(width: number, height: number, theme: Theme) {
+  const { surface, blossom } = palette[theme];
+  const blossomPath = buildBlossomPath(width, height);
+
+  const viewWidth = width / CELL;
+  const viewHeight = height / CELL;
 
   return `<?xml version="1.0" encoding="UTF-8"?>
 <svg
   xmlns="http://www.w3.org/2000/svg"
   width="${width}"
   height="${height}"
-  viewBox="0 0 ${width} ${height}"
+  viewBox="0 0 ${viewWidth} ${viewHeight}"
   shape-rendering="crispEdges"
 >
-  <rect width="100%" height="100%" fill="${surface}" />
-  ${pixels}
+  <rect width="${viewWidth}" height="${viewHeight}" fill="${surface}"/>
+  <path fill="${blossom}" d="${blossomPath}"/>
 </svg>`;
 }
 
-function main() {
-  const width = parseInt(process.argv[2]);
-  const height = parseInt(process.argv[3]);
-  if (!width || !height) {
-    throw new Error('Width and height are required positional arguments');
+function usageAndExit(): never {
+  console.error('Usage: tsx scripts/generate-og-svg.ts <width> <height> [outFile] [theme]');
+  process.exit(1);
+}
+
+function parsePositiveInt(value: string | undefined, name: string) {
+  if (!value) usageAndExit();
+
+  const n = Number.parseInt(value, 10);
+  if (!Number.isFinite(n) || n <= 0) {
+    console.error(`Invalid ${name}: ${value}`);
+    usageAndExit();
   }
-  const theme = process.argv[4] === 'light' ? 'light' : 'dark';
-  const outFile = resolve(process.argv[5] ?? `public/og-${theme}.svg`);
+
+  return n;
+}
+
+function parseTheme(value: string | undefined): Theme {
+  if (value === undefined || value === 'dark') return 'dark';
+  if (value === 'light') return 'light';
+
+  console.error(`Invalid theme: ${value}`);
+  usageAndExit();
+}
+
+function main() {
+  const width = parsePositiveInt(process.argv[2], 'width');
+  const height = parsePositiveInt(process.argv[3], 'height');
+  const outFile = resolve(process.argv[4] ?? `public/og-${width}x${height}.svg`);
+  const theme = parseTheme(process.argv[5]);
 
   mkdirSync(dirname(outFile), { recursive: true });
-  writeFileSync(outFile, buildSvg(theme, width, height), 'utf8');
+  writeFileSync(outFile, buildSvg(width, height, theme), 'utf8');
 
   console.log(`Wrote ${outFile}`);
 }
