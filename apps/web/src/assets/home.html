@@ -1,4 +1,8 @@
+<meta charset="utf-8" />
 <style>
+  * {
+    margin: 0;
+  }
   header > :not(svg) {
     all: initial;
     font: inherit;
@@ -19,7 +23,7 @@
   style="
     display: flex;
     flex-direction: column;
-    margin: 0;
+    height: 100dvh;
     background-color: var(--m3c-surface);
     color: var(--m3c-on-surface);
     font-family: system-ui, sans-serif;
@@ -47,7 +51,7 @@
       display: flex;
       align-self: start;
       flex-direction: column;
-      margin: 0.5rem;
+      padding: 0.5rem;
       color: var(--m3c-primary);
     "
   >
@@ -122,4 +126,12 @@
   window.addEventListener('resize', schedule);
   scheme.addEventListener('change', schedule);
   schedule();
+
+  if (!navigator.userAgent.toLowerCase().includes('chrome')) {
+    const warning = document.createElement('p');
+    warning.innerText = '⚠️ 0K might not work in non-Chromium browsers; try Chrome';
+    warning.style.marginTop = 'auto';
+    warning.style.padding = '0.5rem';
+    document.body.append(warning);
+  }
 </script>
