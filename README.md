@@ -6,7 +6,7 @@ It does all of this at absolute zero: 0K is distributed in static, frozen form.
 
 ## Using sites from the web
 
-0K needs you to run your own tunnel to access the rest of the internet. Don't worry - it's easy, and it's what makes 0K free and reliable.
+0K needs a tunnel to access the rest of the internet. Don't worry - it's easy, and it's what makes 0K free and reliable.
 
 <details><summary>Run a tunnel on your personal computer</summary>
 
