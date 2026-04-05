@@ -62,6 +62,6 @@ If 0K can reach shared domains, it can reach the internet: reaching a CDN = reac
 ## Credits
 
 - Adrift: inspiration for using WebRTC
-- Snowfort: inspiration for using Google Amp
+- Snowfort: inspiration for using Google AMP
 - Night Network: inspiration for building to SVG and hosting on jsDelivr
 - Various skids: inspiration for suggesting hosting on Techsmart and Google Cloud Storage
