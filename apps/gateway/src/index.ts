@@ -13,7 +13,7 @@ function getRoomParam(url: URL) {
   return normalizeRoom(url.searchParams.get('room') ?? url.searchParams.get('code') ?? '');
 }
 
-async function verifyHostProof(room: string, proof: string) {
+async function verifyTunnelProof(room: string, proof: string) {
   if (!proof.trim()) {
     return false;
   }
@@ -38,7 +38,7 @@ function requireRoom(room: string) {
   }
 }
 
-async function requireHostProof(room: string, url: URL) {
+async function requireTunnelProof(room: string, url: URL) {
   requireRoom(room);
 
   const proof = url.searchParams.get('proof') ?? '';
@@ -46,36 +46,36 @@ async function requireHostProof(room: string, url: URL) {
     throw new Response('Must include proof', { status: 400 });
   }
 
-  if (!(await verifyHostProof(room, proof))) {
+  if (!(await verifyTunnelProof(room, proof))) {
     throw new Response('Room proof did not verify', { status: 403 });
   }
 }
 
 export class Room extends DurableObject<Env> {
-  private directConnectionToHost: ReadableByteStreamController | undefined;
+  private directConnectionToTunnel: ReadableByteStreamController | undefined;
   private waitingOffers: Record<string, (answer: string) => void> = {};
 
   lookForOffers(): ReadableStream<Uint8Array> {
-    if (this.directConnectionToHost) {
-      throw new Error('Host already connected');
+    if (this.directConnectionToTunnel) {
+      throw new Error("There's already a tunnel here");
     }
 
     const readable: ReadableStream<Uint8Array> = new ReadableStream({
       type: 'bytes',
       start: (controller) => {
-        this.directConnectionToHost = controller;
+        this.directConnectionToTunnel = controller;
       },
       cancel: () => {
-        if (this.directConnectionToHost) {
-          this.directConnectionToHost = undefined;
+        if (this.directConnectionToTunnel) {
+          this.directConnectionToTunnel = undefined;
         }
       },
     } satisfies UnderlyingByteSource);
 
     setTimeout(() => {
-      if (this.directConnectionToHost) {
-        this.directConnectionToHost.close();
-        this.directConnectionToHost = undefined;
+      if (this.directConnectionToTunnel) {
+        this.directConnectionToTunnel.close();
+        this.directConnectionToTunnel = undefined;
       }
     }, 60000 * 5);
 
@@ -83,13 +83,13 @@ export class Room extends DurableObject<Env> {
   }
 
   async sendOffer(offer: string) {
-    if (!this.directConnectionToHost) {
-      throw new Error('Host not yet connected');
+    if (!this.directConnectionToTunnel) {
+      throw new Error("There isn't a tunnel here");
     }
     const answerPromise = new Promise<string>((resolve) => {
       this.waitingOffers[offer] = resolve;
     });
-    this.directConnectionToHost.enqueue(textEncoder.encode(JSON.stringify(offer) + '\n'));
+    this.directConnectionToTunnel.enqueue(textEncoder.encode(JSON.stringify(offer) + '\n'));
 
     return await answerPromise;
   }
@@ -114,7 +114,7 @@ export default {
         if (req.method !== 'GET') {
           throw new Response('Must GET', { status: 405 });
         }
-        await requireHostProof(room, url);
+        await requireTunnelProof(room, url);
 
         const stub = env.ROOMS.getByName(room);
         const stream = await stub.lookForOffers();
@@ -150,7 +150,7 @@ export default {
       if (url.pathname === '/acceptOffer') {
         const offer = url.searchParams.get('offer');
         const answer = url.searchParams.get('answer');
-        await requireHostProof(room, url);
+        await requireTunnelProof(room, url);
         if (!offer) {
           throw new Response('Must include offer', { status: 400 });
         }
