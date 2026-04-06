@@ -133,7 +133,14 @@ export default {
         }
 
         const stub = env.ROOMS.getByName(room);
-        const answer = await stub.sendOffer(offer);
+        let answer: string;
+        try {
+          answer = await stub.sendOffer(offer);
+        } catch (error) {
+          answer = JSON.stringify({
+            error: error instanceof Error ? error.message : String(error),
+          });
+        }
         const answerEncoded = new TextEncoder().encode(answer);
         return new Response(
           new Blob([ampMagicBytes, answerEncoded], { type: 'application/octet-stream' }),
