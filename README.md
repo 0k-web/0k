@@ -8,7 +8,7 @@ It does all of this at absolute zero: 0K is distributed in static, frozen (heh) 
 
 0K needs a tunnel to access the rest of the internet. Don't worry - it's easy, and it's what makes 0K free and reliable.
 
-<details><summary>Run a tunnel on your personal computer</summary>
+<details><summary>Run a tunnel on a computer, server, or GitHub Codespaces</summary>
 
 TODO
 
@@ -27,12 +27,6 @@ TODO
 </details>
 
 <details><summary>Run a tunnel on CodeHS</summary>
-
-TODO
-
-</details>
-
-<details><summary>Run a tunnel on GitHub Codespaces</summary>
 
 TODO
 
