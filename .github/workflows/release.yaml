@@ -67,26 +67,26 @@ jobs:
           git commit -m "Update published builds for ${GITHUB_SHA}"
           git push
 
-      - name: Build 0K.zip
+      - name: Build selfhost-0k.zip
         run: ZERO_K_CDN=jsdelivr ZERO_K_DEFAULT_GITHUB_BEHAVIOR=jsdelivr pnpm build
 
-      - name: Zip 0K.zip
+      - name: Zip selfhost-0k.zip
         working-directory: apps/web/dist
-        run: zip -r ../../../0K.zip .
+        run: zip -r ../../../selfhost-0k.zip .
 
-      - name: Build 0K_advanced_statically_io.zip
+      - name: Build selfhost-0k-assets-statically.zip
         run: ZERO_K_CDN=statically ZERO_K_DEFAULT_GITHUB_BEHAVIOR=statically pnpm build
 
-      - name: Zip 0K_advanced_statically_io.zip
+      - name: Zip selfhost-0k-assets-statically
         working-directory: apps/web/dist
-        run: zip -r ../../../0K_advanced_statically_io.zip .
+        run: zip -r ../../../selfhost-0k-assets-statically .
 
-      - name: Build 0K_advanced_selfhosting.zip
+      - name: Build selfhost-0k-assets-colocated.zip
         run: pnpm build
 
-      - name: Zip 0K_advanced_selfhosting.zip
+      - name: Zip selfhost-0k-assets-colocated.zip
         working-directory: apps/web/dist
-        run: zip -r ../../../0K_advanced_selfhosting.zip .
+        run: zip -r ../../../selfhost-0k-assets-colocated.zip .
 
       - name: Release
         env:
@@ -104,6 +104,6 @@ jobs:
             --latest \
             --title "$TAG" \
             --notes-file .github/latest-release-notes.md \
-            0K.zip \
-            0K_advanced_statically_io.zip \
-            0K_advanced_selfhosting.zip
+            selfhost-0k.zip \
+            selfhost-0k-assets-statically.zip \
+            selfhost-0k-assets-colocated.zip

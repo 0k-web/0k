@@ -1,37 +1,10 @@
-# 0K
+# [Launch 0K](https://github.com/0k-web/0k/releases/tag/latest)
+
+# About 0K
 
 0K can connect directly to GitHub, open a downloaded website, or access the rest of the internet via WebRTC.
 
 It does all of this at absolute zero: 0K is distributed in static, frozen (heh) form.
-
-## Using sites from the web
-
-0K needs a tunnel to access the rest of the internet. Don't worry - it's easy, and it's what makes 0K free and reliable.
-
-<details><summary>Run a tunnel on a computer, server, or GitHub Codespaces</summary>
-
-TODO
-
-</details>
-
-<details><summary>Run a tunnel on your personal Android device</summary>
-
-TODO
-
-</details>
-
-<details><summary>Run a tunnel on your personal browser</summary>
-
-TODO
-
-</details>
-
-<details><summary>Run a tunnel on CodeHS</summary>
-
-TODO
-
-</details>
-
 
 ## The zen of 0K / 0K from first principles
 
