@@ -338,7 +338,7 @@ export async function primeWebRtc() {
   }
 }
 
-async function ensureConnected(allowPrompt: boolean) {
+export async function ensureConnected(allowPrompt: boolean) {
   if (connected()) {
     return;
   }

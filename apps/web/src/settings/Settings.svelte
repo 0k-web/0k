@@ -2,6 +2,7 @@
   import CreateLocalSite from './CreateLocalSite.svelte';
   import { githubBehaviorOptions, normalizeGitHubBehavior } from '../githubBehavior';
   import { keyGitHubBehavior } from './settingsLocalStorage';
+  import { ensureConnected } from '../webrtc';
 
   let { close }: { close: () => void } = $props();
 
@@ -46,6 +47,10 @@
       <button class="chip" onclick={() => (localSiteOpen = true)}>+</button>
     </div>
   </div>
+  <label class="split">
+    <p>Practice connecting to a tunnel</p>
+    <button onclick={() => ensureConnected(true)}>Connect to a tunnel</button>
+  </label>
 </dialog>
 
 {#if localSiteOpen}
@@ -100,6 +105,14 @@
     border-radius: 1rem;
     padding-inline: 0.5rem;
     align-self: stretch;
+  }
+  button {
+    display: flex;
+    align-items: center;
+    height: 2rem;
+    padding-inline: 1rem;
+    border-radius: 1rem;
+    background-color: var(--m3c-surface-container-highest);
   }
 
   .chips {
