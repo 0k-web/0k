@@ -77,9 +77,9 @@ jobs:
       - name: Build selfhost-0k-assets-statically.zip
         run: ZERO_K_CDN=statically ZERO_K_DEFAULT_GITHUB_BEHAVIOR=statically pnpm build
 
-      - name: Zip selfhost-0k-assets-statically
+      - name: Zip selfhost-0k-assets-statically.zip
         working-directory: apps/web/dist
-        run: zip -r ../../../selfhost-0k-assets-statically .
+        run: zip -r ../../../selfhost-0k-assets-statically.zip .
 
       - name: Build selfhost-0k-assets-colocated.zip
         run: pnpm build
