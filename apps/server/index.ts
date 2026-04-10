@@ -287,6 +287,31 @@ function shutdown() {
   peerConnections.clear();
 }
 
+// --- Relaunch in a terminal if double-clicked without one ---
+
+if (!Deno.isatty(Deno.stdout.rid)) {
+  const exec = Deno.execPath();
+  const terms: [string, string[]][] = [
+    ['ptyxis', ['-e', exec, ...Deno.args]],
+    ['gnome-terminal', ['--', exec, ...Deno.args]],
+    ['konsole', ['-e', exec, ...Deno.args]],
+    ['xfce4-terminal', ['-e', exec, ...Deno.args]],
+    ['xterm', ['-e', exec, ...Deno.args]],
+    ['open', ['-a', 'Terminal', exec, ...Deno.args]],
+  ];
+  for (const [cmd, args] of terms) {
+    try {
+      const check = new Deno.Command('which', { args: [cmd] }).outputSync();
+      if (check.success) {
+        new Deno.Command(cmd, { args, cwd: Deno.cwd() }).spawn();
+        Deno.exit(0);
+      }
+    } catch {
+      /* next */
+    }
+  }
+}
+
 // --- Entry point ---
 
 const cliOptions = parseCliOptions(Deno.args);
