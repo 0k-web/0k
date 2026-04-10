@@ -138,7 +138,7 @@
     animation: formIn 400ms cubic-bezier(0.05, 0.7, 0.1, 1);
   }
   dialog::backdrop {
-    background-color: oklch(from var(--m3c-scrim) l c h / 0.55);
+    background-color: oklch(from var(--m3c-scrim) l c h / 0.7);
     animation: backdropIn 300ms ease;
   }
 
