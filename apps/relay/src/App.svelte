@@ -87,7 +87,7 @@
 </main>
 
 <p class="disclaimer">
-  It's inconsiderate to use substantiatively someone else's Wisp server without getting permission.
+  It's inconsiderate to substantively use someone else's Wisp server without getting permission.
 </p>
 
 <style>
