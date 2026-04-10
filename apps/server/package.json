@@ -11,6 +11,9 @@
     "compile:mac-x64": "cd /tmp && deno compile -A --no-check --target x86_64-apple-darwin --output tunnel-0k-mac-x64 index.mjs",
     "compile:win-x64": "cd /tmp && deno compile -A --no-check --target x86_64-pc-windows-msvc --output tunnel-0k-win-x64.exe index.mjs"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "files": [
     "bin.js"
   ],
