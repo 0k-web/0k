@@ -1,7 +1,5 @@
 # [Launch 0K](https://github.com/0k-web/0k/releases/tag/latest)
 
-# About 0K
-
 0K can connect directly to GitHub, open a downloaded website, or access the rest of the internet via WebRTC.
 
 It does all of this at absolute zero: 0K is distributed in static, frozen (heh) form.
