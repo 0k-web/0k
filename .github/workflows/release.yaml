@@ -10,6 +10,9 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      id-token: write
+      attestations: write
+      artifact-metadata: write
 
     steps:
       - name: Checkout
@@ -118,6 +121,18 @@ jobs:
       - name: Copy compiled server
         run: cp /tmp/tunnel-0k-linux-arm64 /tmp/tunnel-0k-linux-x64 /tmp/tunnel-0k-mac-arm64 /tmp/tunnel-0k-mac-x64 /tmp/tunnel-0k-windows-x64.exe .
 
+      - name: Attest release artifacts
+        uses: actions/attest@v4
+        with:
+          subject-path: |
+            selfhost-0k.zip
+            selfhost-0k-assets-statically.zip
+            selfhost-0k-assets-colocated.zip
+            tunnel-0k-linux-arm64
+            tunnel-0k-linux-x64
+            tunnel-0k-mac-arm64
+            tunnel-0k-mac-x64
+            tunnel-0k-windows-x64.exe
       - name: Release
         env:
           GH_TOKEN: ${{ github.token }}
