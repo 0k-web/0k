@@ -9,16 +9,24 @@ import {
 
 const textEncoder = new TextEncoder();
 
-const ALLOWED_ORIGIN = 'https://0k-web.github.io';
+const ALLOWED_ORIGINS = ['https://0k-web.github.io', /^http:\/\/localhost(:\d+)?$/] as const;
 const CORS_HEADERS = {
-  'access-control-allow-origin': ALLOWED_ORIGIN,
   'access-control-allow-headers': 'content-type',
   'access-control-expose-headers': 'content-type',
   'access-control-max-age': '86400',
 } as const;
 
 function corsHeaders(request: Request): Record<string, string> | undefined {
-  if (request.headers.get('origin') == ALLOWED_ORIGIN) return { ...CORS_HEADERS };
+  const origin = request.headers.get('origin');
+  if (!origin) return undefined;
+
+  for (const pattern of ALLOWED_ORIGINS) {
+    if (typeof pattern == 'string') {
+      if (origin == pattern) return { 'access-control-allow-origin': origin, ...CORS_HEADERS };
+    } else {
+      if (pattern.test(origin)) return { 'access-control-allow-origin': origin, ...CORS_HEADERS };
+    }
+  }
 }
 
 const Errors = {
