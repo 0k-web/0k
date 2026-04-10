@@ -1,4 +1,4 @@
-export type WebRtcPhase =
+type WebRtcPhase =
   | 'idle'
   | 'preparing-peer'
   | 'gathering-offer'

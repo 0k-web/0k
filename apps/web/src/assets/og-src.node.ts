@@ -1,4 +1,3 @@
-// scripts/generate-og-svg.ts
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 

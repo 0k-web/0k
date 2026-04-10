@@ -1,6 +1,13 @@
 <script lang="ts">
   import { setUpdateCallback, startRelay, shutdown } from './relay';
-  import { resetRelayState, type RelayPhase } from './state.svelte';
+
+  type RelayPhase =
+    | 'idle'
+    | 'connecting-wisp'
+    | 'connecting-gateway'
+    | 'waiting-for-offers'
+    | 'connected'
+    | 'failed';
 
   let wispUrl = $state('');
   let lastError = $state('');
@@ -39,7 +46,6 @@
 
   function handleDisconnect() {
     shutdown();
-    resetRelayState();
     phase = 'idle';
     detail = '';
     lastError = '';

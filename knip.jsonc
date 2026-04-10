@@ -1,6 +1,10 @@
 {
   "$schema": "https://unpkg.com/knip@5/schema-jsonc.json",
-  "ignore": ["apps/web/src/app.d.ts", "apps/web/src/libcurl.d.ts"],
+  "ignore": [
+    "apps/web/src/app.d.ts",
+    "apps/web/src/libcurl.d.ts",
+    "apps/web/src/assets/og-src.node.ts",
+  ],
   "ignoreDependencies": ["cloudflare", "@mercuryworkshop/scramjet", "@unocss/reset"],
   "workspaces": {
     "apps/web": {
@@ -8,16 +12,16 @@
       "entry": ["src/main.ts", "+sw.ts", "vite.config.ts"],
       "project": ["src/**/*.{ts,js,svelte}"],
       "svelte": {
-        "entry": ["svelte.config.js"]
-      }
+        "entry": ["svelte.config.js"],
+      },
     },
     "apps/relay": {
       "vite": false,
       "entry": ["src/main.ts", "vite.config.ts"],
       "project": ["src/**/*.{ts,js,svelte}"],
       "svelte": {
-        "entry": ["svelte.config.js"]
-      }
-    }
-  }
+        "entry": ["svelte.config.js"],
+      },
+    },
+  },
 }
