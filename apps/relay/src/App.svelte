@@ -72,11 +72,11 @@
         <button type="submit" class="connect">Connect</button>
       </div>
     </form>
-    <div class="below">
-      {#if lastError}
+    {#if lastError}
+      <div class="below">
         <p class="error">{lastError}</p>
-      {/if}
-    </div>
+      </div>
+    {/if}
   {:else}
     <div class="connected-grid">
       <div class="grid-code">Tunnel code: <strong>{resolvedCode}</strong></div>
