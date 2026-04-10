@@ -9,6 +9,18 @@ import {
 
 const textEncoder = new TextEncoder();
 
+const ALLOWED_ORIGIN = 'https://0k-web.github.io';
+const CORS_HEADERS = {
+  'access-control-allow-origin': ALLOWED_ORIGIN,
+  'access-control-allow-headers': 'content-type',
+  'access-control-expose-headers': 'content-type',
+  'access-control-max-age': '86400',
+} as const;
+
+function corsHeaders(request: Request): Record<string, string> | undefined {
+  if (request.headers.get('origin') == ALLOWED_ORIGIN) return { ...CORS_HEADERS };
+}
+
 const Errors = {
   ALREADY_HAVE_TUNNEL: "There's already a tunnel here",
   NO_TUNNEL: "There isn't a tunnel here",
@@ -118,6 +130,13 @@ export class Tunnel extends DurableObject<Env> {
 
 export default {
   async fetch(req): Promise<Response> {
+    const cors = corsHeaders(req);
+
+    if (req.method === 'OPTIONS' && cors) {
+      return new Response(null, { status: 204, headers: cors });
+    }
+
+    let response: Response;
     try {
       const url = new URL(req.url);
       const code = getCodeParam(url);
@@ -130,14 +149,12 @@ export default {
 
         const stub = env.TUNNELS.getByName(code);
         const stream = await stub.lookForOffers();
-        return new Response(stream, {
+        response = new Response(stream, {
           headers: {
             'content-type': 'text/plain; charset=utf-8',
           },
         });
-      }
-
-      if (url.pathname === '/sendOffer') {
+      } else if (url.pathname === '/sendOffer') {
         const offer = url.searchParams.get('offer');
         requireCode(code);
         if (!offer) {
@@ -154,12 +171,10 @@ export default {
           });
         }
         const answerEncoded = new TextEncoder().encode(answer);
-        return new Response(
+        response = new Response(
           new Blob([ampMagicBytes, answerEncoded], { type: 'application/octet-stream' }),
         );
-      }
-
-      if (url.pathname === '/acceptOffer') {
+      } else if (url.pathname === '/acceptOffer') {
         const offer = url.searchParams.get('offer');
         const answer = url.searchParams.get('answer');
         await requireTunnelProof(code, url);
@@ -172,18 +187,29 @@ export default {
 
         const stub = env.TUNNELS.getByName(code);
         await stub.acceptOffer(offer, answer);
-        return new Response('OK');
+        response = new Response('OK');
+      } else {
+        response = new Response('Not found', { status: 404 });
       }
-
-      return new Response('Not found', { status: 404 });
     } catch (error) {
       if (error instanceof Response) {
-        return error;
+        response = error;
+      } else if (error instanceof Error && error.message in ErrorStatuses) {
+        response = new Response(error.message, { status: ErrorStatuses[error.message] });
+      } else {
+        throw error;
       }
-      if (error instanceof Error && error.message in ErrorStatuses) {
-        return new Response(error.message, { status: ErrorStatuses[error.message] });
-      }
-      throw error;
     }
+
+    if (cors) {
+      const headers = new Headers(response.headers);
+      for (const [k, v] of Object.entries(cors)) headers.set(k, v);
+      return new Response(response.body, {
+        status: response.status,
+        statusText: response.statusText,
+        headers,
+      });
+    }
+    return response;
   },
 } satisfies ExportedHandler<Env>;
