@@ -63,7 +63,7 @@ async function requireTunnelProof(code: string, url: URL) {
   }
 }
 
-export class Code extends DurableObject<Env> {
+export class Tunnel extends DurableObject<Env> {
   private directConnectionToTunnel: ReadableByteStreamController | undefined;
   private waitingOffers: Record<string, (answer: string) => void> = {};
 
@@ -128,7 +128,7 @@ export default {
         }
         await requireTunnelProof(code, url);
 
-        const stub = env.CODES.getByName(code);
+        const stub = env.TUNNELS.getByName(code);
         const stream = await stub.lookForOffers();
         return new Response(stream, {
           headers: {
@@ -144,7 +144,7 @@ export default {
           throw new Response('Must include offer', { status: 400 });
         }
 
-        const stub = env.CODES.getByName(code);
+        const stub = env.TUNNELS.getByName(code);
         let answer: string;
         try {
           answer = await stub.sendOffer(offer);
@@ -170,7 +170,7 @@ export default {
           throw new Response('Must include answer', { status: 400 });
         }
 
-        const stub = env.CODES.getByName(code);
+        const stub = env.TUNNELS.getByName(code);
         await stub.acceptOffer(offer, answer);
         return new Response('OK');
       }

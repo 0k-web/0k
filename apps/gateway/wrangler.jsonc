@@ -13,13 +13,22 @@
 				"Code"
 			],
 			"tag": "v1"
+		},
+		{
+			"renamed_classes": [
+				{
+					"from": "Room",
+					"to": "Tunnel"
+				}
+			],
+			"tag": "v2"
 		}
 	],
 	"durable_objects": {
 		"bindings": [
 			{
-				"class_name": "Code",
-				"name": "CODES"
+				"class_name": "Tunnel",
+				"name": "TUNNELS"
 			}
 		]
 	},
