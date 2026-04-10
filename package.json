@@ -5,7 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "pnpm --filter \"@0k-web/web\" dev",
+    "dev:relay": "pnpm --filter \"@0k-web/relay\" dev",
     "build": "pnpm --filter \"@0k-web/web\" build",
+    "build:relay": "pnpm --filter \"@0k-web/relay\" build",
     "preview": "pnpm --filter \"@0k-web/web\" preview",
     "knip": "knip",
     "check": "pnpm --filter \"@0k-web/web\" check",

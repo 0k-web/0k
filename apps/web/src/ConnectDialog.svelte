@@ -108,7 +108,7 @@
     <p class="option">Personal browser relay</p>
     <p>
       Keep
-      <code>RELAY_URL_TODO</code>
+      <code>https://0k-web.github.io/relay/</code>
       open on a personal device.
     </p>
   </div>

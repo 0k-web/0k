@@ -10,6 +10,14 @@
       "svelte": {
         "entry": ["svelte.config.js"]
       }
+    },
+    "apps/relay": {
+      "vite": false,
+      "entry": ["src/main.ts", "vite.config.ts"],
+      "project": ["src/**/*.{ts,js,svelte}"],
+      "svelte": {
+        "entry": ["svelte.config.js"]
+      }
     }
   }
 }

@@ -22,6 +22,13 @@ jobs:
           token: ${{ secrets.BUILDS_PAT }}
           path: builds-repo
 
+      - name: Checkout relay repo
+        uses: actions/checkout@v4
+        with:
+          repository: 0k-web/relay
+          token: ${{ secrets.RELAY_PAT }}
+          path: relay-repo
+
       - name: Set up pnpm
         uses: pnpm/action-setup@v4
         with:
@@ -68,6 +75,23 @@ jobs:
             exit 0
           fi
           git commit -m "Update published builds for ${GITHUB_SHA}"
+          git push
+
+      - name: Build relay
+        run: pnpm --filter "@0k-web/relay" build
+      - name: Push relay repo
+        working-directory: relay-repo
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          rm -rf ./*
+          cp -r ../apps/relay/dist/* ./
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No relay build changes"
+            exit 0
+          fi
+          git commit -m "Update relay for ${GITHUB_SHA}"
           git push
 
       - name: Build selfhost-0k.zip
