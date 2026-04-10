@@ -81,7 +81,7 @@
   <div class="instructions">
     <p class="title">How to start a tunnel</p>
 
-    <p class="option">Standalone (home PC / Codespaces / server)</p>
+    <p class="option">Standalone (home PC / Codespaces)</p>
     <p>
       Download and run the tunnel executable for your operating system from
       <a href="https://github.com/0k-web/0k/releases/tag/latest">GitHub Releases</a>. Or just run
@@ -90,7 +90,9 @@
 
     <p class="option">CodeHS</p>
     <p>
-      Create a <a href="https://codehs.com/sandbox">CodeHS "JavaScript Console" sandbox</a>, click
+      Create a <a href="https://codehs.com/sandbox" target="_blank"
+        >CodeHS "JavaScript Console" sandbox</a
+      >, click
       <button onclick={() => navigator.clipboard.writeText(codehsScript)}>here</button> to copy, then
       paste and run.
     </p>
@@ -98,7 +100,8 @@
     <p class="option">Server</p>
     <p>
       Learn how to run a dedicated 0K tunnel <a
-        href="https://github.com/0k-web/0k/blob/main/dedicated-tunnel.md">here</a
+        href="https://github.com/0k-web/0k/blob/main/dedicated-tunnel.md"
+        target="_blank">here</a
       >.
     </p>
 
