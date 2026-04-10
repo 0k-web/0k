@@ -4,12 +4,12 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "pnpm --filter \"@0k/web\" dev",
-    "build": "pnpm --filter \"@0k/web\" build",
-    "preview": "pnpm --filter \"@0k/web\" preview",
+    "dev": "pnpm --filter \"@0k-web/web\" dev",
+    "build": "pnpm --filter \"@0k-web/web\" build",
+    "preview": "pnpm --filter \"@0k-web/web\" preview",
     "knip": "knip",
-    "check": "pnpm --filter \"@0k/web\" check",
-    "format": "pnpm --filter \"@0k/web\" format"
+    "check": "pnpm --filter \"@0k-web/web\" check",
+    "format": "pnpm --filter \"@0k-web/web\" format"
   },
   "devDependencies": {
     "@types/node": "^24.12.0",

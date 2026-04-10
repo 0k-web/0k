@@ -33,12 +33,16 @@ jobs:
           node-version: latest
           cache: pnpm
 
+      - name: Set up Deno
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: latest
+
       - name: Install
         run: pnpm install --frozen-lockfile
 
       - name: Build jsDelivr SVG
         run: ZERO_K_CDN=jsdelivr ZERO_K_DEFAULT_GITHUB_BEHAVIOR=jsdelivr ZERO_K_INDEX_FORMAT=svg pnpm build
-
       - name: Copy jsDelivr SVG
         run: |
           mkdir -p builds-repo/jsdelivr
@@ -47,7 +51,6 @@ jobs:
 
       - name: Build Statically SVG
         run: ZERO_K_CDN=statically ZERO_K_DEFAULT_GITHUB_BEHAVIOR=statically ZERO_K_INDEX_FORMAT=svg pnpm build
-
       - name: Copy Statically SVG
         run: |
           mkdir -p builds-repo/statically
@@ -69,24 +72,27 @@ jobs:
 
       - name: Build selfhost-0k.zip
         run: ZERO_K_CDN=jsdelivr ZERO_K_DEFAULT_GITHUB_BEHAVIOR=jsdelivr pnpm build
-
       - name: Zip selfhost-0k.zip
         working-directory: apps/web/dist
         run: zip -r ../../../selfhost-0k.zip .
 
       - name: Build selfhost-0k-assets-statically.zip
         run: ZERO_K_CDN=statically ZERO_K_DEFAULT_GITHUB_BEHAVIOR=statically pnpm build
-
       - name: Zip selfhost-0k-assets-statically.zip
         working-directory: apps/web/dist
         run: zip -r ../../../selfhost-0k-assets-statically.zip .
 
       - name: Build selfhost-0k-assets-colocated.zip
         run: pnpm build
-
       - name: Zip selfhost-0k-assets-colocated.zip
         working-directory: apps/web/dist
         run: zip -r ../../../selfhost-0k-assets-colocated.zip .
+
+      - name: Compile server
+        working-directory: apps/server
+        run: pnpm compile
+      - name: Copy compiled server
+        run: cp /tmp/tunnel-0k-linux-arm64 /tmp/tunnel-0k-linux-x64 /tmp/tunnel-0k-mac-arm64 /tmp/tunnel-0k-mac-x64 /tmp/tunnel-0k-win-x64.exe .
 
       - name: Release
         env:
@@ -106,4 +112,9 @@ jobs:
             --notes-file .github/latest-release-notes.md \
             selfhost-0k.zip \
             selfhost-0k-assets-statically.zip \
-            selfhost-0k-assets-colocated.zip
+            selfhost-0k-assets-colocated.zip \
+            tunnel-0k-linux-arm64 \
+            tunnel-0k-linux-x64 \
+            tunnel-0k-mac-arm64 \
+            tunnel-0k-mac-x64 \
+            tunnel-0k-win-x64.exe

@@ -5,7 +5,7 @@ import {
   normalizeRoom,
   roomFromProof,
   sha256HexFromText,
-} from '@0k/lib';
+} from '@0k-web/lib';
 
 const textEncoder = new TextEncoder();
 

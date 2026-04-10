@@ -1,5 +1,5 @@
 {
-  "name": "@0k/web",
+  "name": "@0k-web/web",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -11,7 +11,7 @@
     "format": "prettier . --write"
   },
   "dependencies": {
-    "@0k/lib": "workspace:*",
+    "@0k-web/lib": "workspace:*",
     "libcurl.js": "^0.7.4"
   },
   "devDependencies": {

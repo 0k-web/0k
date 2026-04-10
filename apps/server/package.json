@@ -1,17 +1,26 @@
 {
-  "name": "@0k/server",
-  "private": true,
-  "version": "0.0.0",
+  "name": "@0k-web/server",
+  "version": "0.0.1",
   "type": "module",
   "scripts": {
-    "start": "deno run -A index.ts",
-    "check": "deno check index.ts",
-    "compile": "deno compile --allow-env --allow-net --output build/0k-server index.ts"
+    "start": "deno -A index.ts",
+    "compile": "tsdown && cp ./dist/index.mjs /tmp && pnpm compile:linux-arm64 && pnpm compile:linux-x64 && pnpm compile:mac-arm64 && pnpm compile:mac-x64 && pnpm compile:win-x64",
+    "compile:linux-arm64": "cd /tmp && deno compile -A --no-check --target aarch64-unknown-linux-gnu --output tunnel-0k-linux-arm64 index.mjs",
+    "compile:linux-x64": "cd /tmp && deno compile -A --no-check --target x86_64-unknown-linux-gnu --output tunnel-0k-linux-x64 index.mjs",
+    "compile:mac-arm64": "cd /tmp && deno compile -A --no-check --target aarch64-apple-darwin --output tunnel-0k-mac-arm64 index.mjs",
+    "compile:mac-x64": "cd /tmp && deno compile -A --no-check --target x86_64-apple-darwin --output tunnel-0k-mac-x64 index.mjs",
+    "compile:win-x64": "cd /tmp && deno compile -A --no-check --target x86_64-pc-windows-msvc --output tunnel-0k-win-x64.exe index.mjs"
   },
+  "files": [
+    "bin.js"
+  ],
+  "bin": "bin.js",
   "devDependencies": {
-    "@types/node": "^24.12.0"
+    "@types/node": "^24.12.0",
+    "tsdown": "^0.21.7",
+    "werift": "^0.22.2"
   },
   "dependencies": {
-    "werift": "^0.22.2"
+    "cachedir": "^2.4.0"
   }
 }

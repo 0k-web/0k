@@ -9,7 +9,7 @@ import {
   normalizeRoom,
   toUint8Array,
   waitForIceGathering,
-} from '@0k/lib';
+} from '@0k-web/lib';
 import { libcurl } from 'libcurl.js';
 import libcurlWasmUrl from 'libcurl.js/libcurl.wasm?url';
 import type { WebRtcUiState } from './webrtc-state.svelte';
