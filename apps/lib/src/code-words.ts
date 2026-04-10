@@ -1,4 +1,4 @@
-export const roomWords = [
+export const codeWords = [
   'aahed',
   'aardwolf',
   'aasvogel',

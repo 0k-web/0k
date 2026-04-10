@@ -3,7 +3,7 @@ export type WebRtcPhase =
   | 'preparing-peer'
   | 'gathering-offer'
   | 'offer-ready'
-  | 'waiting-for-room'
+  | 'waiting-for-code'
   | 'sending-offer'
   | 'applying-answer'
   | 'opening-channel'
@@ -15,7 +15,7 @@ export type WebRtcUiState = {
   detail: string;
   connecting: boolean;
   promptOpen: boolean;
-  room: string;
+  code: string;
   lastError: string;
 };
 
@@ -24,7 +24,7 @@ const state = $state<WebRtcUiState>({
   detail: 'Tunnel idle.',
   connecting: false,
   promptOpen: false,
-  room: '',
+  code: '',
   lastError: '',
 });
 

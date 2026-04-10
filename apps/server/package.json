@@ -9,7 +9,7 @@
     "compile:linux-x64": "cd /tmp && deno compile -A --no-check --target x86_64-unknown-linux-gnu --output tunnel-0k-linux-x64 index.mjs",
     "compile:mac-arm64": "cd /tmp && deno compile -A --no-check --target aarch64-apple-darwin --output tunnel-0k-mac-arm64 index.mjs",
     "compile:mac-x64": "cd /tmp && deno compile -A --no-check --target x86_64-apple-darwin --output tunnel-0k-mac-x64 index.mjs",
-    "compile:win-x64": "cd /tmp && deno compile -A --no-check --target x86_64-pc-windows-msvc --output tunnel-0k-win-x64.exe index.mjs"
+    "compile:win-x64": "cd /tmp && deno compile -A --no-check --target x86_64-pc-windows-msvc --output tunnel-0k-windows-x64.exe index.mjs"
   },
   "publishConfig": {
     "access": "public"

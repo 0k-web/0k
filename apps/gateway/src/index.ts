@@ -1,28 +1,40 @@
 import { DurableObject, env } from 'cloudflare:workers';
 import {
   ampMagicBytes,
-  isDomainRoom,
-  normalizeRoom,
-  roomFromProof,
+  isDomainCode,
+  normalizeCode,
+  codeFromProof,
   sha256HexFromText,
 } from '@0k-web/lib';
 
 const textEncoder = new TextEncoder();
 
-function getRoomParam(url: URL) {
-  return normalizeRoom(url.searchParams.get('room') ?? url.searchParams.get('code') ?? '');
+const Errors = {
+  ALREADY_HAVE_TUNNEL: "There's already a tunnel here",
+  NO_TUNNEL: "There isn't a tunnel here",
+  OFFER_NOT_PRESENT: 'Offer not present',
+} as const;
+
+const ErrorStatuses: Record<string, number> = {
+  [Errors.ALREADY_HAVE_TUNNEL]: 409,
+  [Errors.NO_TUNNEL]: 503,
+  [Errors.OFFER_NOT_PRESENT]: 404,
+};
+
+function getCodeParam(url: URL) {
+  return normalizeCode(url.searchParams.get('code') ?? '');
 }
 
-async function verifyTunnelProof(room: string, proof: string) {
+async function verifyTunnelProof(code: string, proof: string) {
   if (!proof.trim()) {
     return false;
   }
 
-  if (!isDomainRoom(room)) {
-    return (await roomFromProof(proof)) === room;
+  if (!isDomainCode(code)) {
+    return (await codeFromProof(proof)) === code;
   }
 
-  const response = await fetch(new URL('/0k-hash', `https://${room}`), {
+  const response = await fetch(new URL('/0k-hash', `https://${code}`), {
     redirect: 'follow',
   });
   if (!response.ok) {
@@ -32,32 +44,32 @@ async function verifyTunnelProof(room: string, proof: string) {
   return (await response.text()).trim().toLowerCase() === (await sha256HexFromText(proof));
 }
 
-function requireRoom(room: string) {
-  if (!room) {
-    throw new Response('Must include room', { status: 400 });
+function requireCode(code: string) {
+  if (!code) {
+    throw new Response('Must include code', { status: 400 });
   }
 }
 
-async function requireTunnelProof(room: string, url: URL) {
-  requireRoom(room);
+async function requireTunnelProof(code: string, url: URL) {
+  requireCode(code);
 
   const proof = url.searchParams.get('proof') ?? '';
   if (!proof) {
     throw new Response('Must include proof', { status: 400 });
   }
 
-  if (!(await verifyTunnelProof(room, proof))) {
-    throw new Response('Room proof did not verify', { status: 403 });
+  if (!(await verifyTunnelProof(code, proof))) {
+    throw new Response('Code proof did not verify', { status: 403 });
   }
 }
 
-export class Room extends DurableObject<Env> {
+export class Code extends DurableObject<Env> {
   private directConnectionToTunnel: ReadableByteStreamController | undefined;
   private waitingOffers: Record<string, (answer: string) => void> = {};
 
   lookForOffers(): ReadableStream<Uint8Array> {
     if (this.directConnectionToTunnel) {
-      throw new Error("There's already a tunnel here");
+      throw new Error(Errors.ALREADY_HAVE_TUNNEL);
     }
 
     const readable: ReadableStream<Uint8Array> = new ReadableStream({
@@ -84,7 +96,7 @@ export class Room extends DurableObject<Env> {
 
   async sendOffer(offer: string) {
     if (!this.directConnectionToTunnel) {
-      throw new Error("There isn't a tunnel here");
+      throw new Error(Errors.NO_TUNNEL);
     }
     const answerPromise = new Promise<string>((resolve) => {
       this.waitingOffers[offer] = resolve;
@@ -97,7 +109,7 @@ export class Room extends DurableObject<Env> {
   async acceptOffer(offer: string, answer: string) {
     const send = this.waitingOffers[offer];
     if (!send) {
-      throw new Error('Offer not present');
+      throw new Error(Errors.OFFER_NOT_PRESENT);
     }
 
     send(answer);
@@ -108,15 +120,15 @@ export default {
   async fetch(req): Promise<Response> {
     try {
       const url = new URL(req.url);
-      const room = getRoomParam(url);
+      const code = getCodeParam(url);
 
       if (url.pathname === '/lookForOffers') {
         if (req.method !== 'GET') {
           throw new Response('Must GET', { status: 405 });
         }
-        await requireTunnelProof(room, url);
+        await requireTunnelProof(code, url);
 
-        const stub = env.ROOMS.getByName(room);
+        const stub = env.CODES.getByName(code);
         const stream = await stub.lookForOffers();
         return new Response(stream, {
           headers: {
@@ -127,12 +139,12 @@ export default {
 
       if (url.pathname === '/sendOffer') {
         const offer = url.searchParams.get('offer');
-        requireRoom(room);
+        requireCode(code);
         if (!offer) {
           throw new Response('Must include offer', { status: 400 });
         }
 
-        const stub = env.ROOMS.getByName(room);
+        const stub = env.CODES.getByName(code);
         let answer: string;
         try {
           answer = await stub.sendOffer(offer);
@@ -150,7 +162,7 @@ export default {
       if (url.pathname === '/acceptOffer') {
         const offer = url.searchParams.get('offer');
         const answer = url.searchParams.get('answer');
-        await requireTunnelProof(room, url);
+        await requireTunnelProof(code, url);
         if (!offer) {
           throw new Response('Must include offer', { status: 400 });
         }
@@ -158,7 +170,7 @@ export default {
           throw new Response('Must include answer', { status: 400 });
         }
 
-        const stub = env.ROOMS.getByName(room);
+        const stub = env.CODES.getByName(code);
         await stub.acceptOffer(offer, answer);
         return new Response('OK');
       }
@@ -167,6 +179,9 @@ export default {
     } catch (error) {
       if (error instanceof Response) {
         return error;
+      }
+      if (error instanceof Error && error.message in ErrorStatuses) {
+        return new Response(error.message, { status: ErrorStatuses[error.message] });
       }
       throw error;
     }

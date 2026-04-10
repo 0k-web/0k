@@ -1,4 +1,4 @@
-import { roomWords } from './room-words.ts';
+import { codeWords } from './code-words.ts';
 
 const textEncoder = new TextEncoder();
 
@@ -26,8 +26,8 @@ function hashToIndex(bytes: Uint8Array, modulo: number) {
   return value;
 }
 
-export function normalizeRoom(room: string) {
-  let normalized = room.trim();
+export function normalizeCode(code: string) {
+  let normalized = code.trim();
   if (!normalized) {
     return '';
   }
@@ -43,8 +43,8 @@ export function normalizeRoom(room: string) {
   return normalized.replace(/\/+$/, '').replace(/\.$/, '').toLowerCase();
 }
 
-export function isDomainRoom(room: string) {
-  const normalized = normalizeRoom(room);
+export function isDomainCode(code: string) {
+  const normalized = normalizeCode(code);
   return normalized.includes('.') || normalized === 'localhost' || normalized.startsWith('[');
 }
 
@@ -54,7 +54,7 @@ export function wordFromSha256Hash(hash: BinaryLike) {
     throw new Error('SHA-256 hash must not be empty');
   }
 
-  return roomWords[hashToIndex(bytes, roomWords.length)]!;
+  return codeWords[hashToIndex(bytes, codeWords.length)]!;
 }
 
 export async function sha256Text(text: string) {
@@ -69,7 +69,7 @@ export async function sha256HexFromText(text: string) {
   return sha256Hex(await sha256Text(text));
 }
 
-export async function roomFromProof(proof: string) {
+export async function codeFromProof(proof: string) {
   return wordFromSha256Hash(await sha256Text(proof));
 }
 

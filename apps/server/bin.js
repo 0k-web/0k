@@ -19,7 +19,7 @@ const platforms = {
   'darwin-x64': 'tunnel-0k-mac-x64',
   'linux-arm64': 'tunnel-0k-linux-arm64',
   'linux-x64': 'tunnel-0k-linux-x64',
-  'win32-x64': 'tunnel-0k-win-x64.exe',
+  'win32-x64': 'tunnel-0k-windows-x64.exe',
 };
 
 const key = `${process.platform}-${process.arch}`;

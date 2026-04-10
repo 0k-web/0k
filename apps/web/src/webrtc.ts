@@ -6,7 +6,7 @@ import type {
 import {
   ampMagicBytes,
   iceGatherTimeoutMs,
-  normalizeRoom,
+  normalizeCode,
   toUint8Array,
   waitForIceGathering,
 } from '@0k-web/lib';
@@ -121,9 +121,9 @@ async function waitForDataChannelOpen(
   });
 }
 
-async function sendOffer(room: string, offer: string) {
+async function sendOffer(code: string, offer: string) {
   const url = new URL(`${gatewayAmpBase}/sendOffer`);
-  url.searchParams.set('room', room);
+  url.searchParams.set('code', code);
   url.searchParams.set('offer', offer);
 
   const response = await fetch(url, {
@@ -199,17 +199,17 @@ function refreshPassivePhase() {
 
   if (runtime.promptRequest) {
     setWebRtcPhase(
-      'waiting-for-room',
+      'waiting-for-code',
       runtime.preparedOffer
         ? 'Local offer is ready. Enter the tunnel code to connect.'
-        : 'Preparing the local offer while you enter the tunnel.',
+        : 'Preparing the local offer while you enter the tunnel code.',
       { connecting: false },
     );
     return;
   }
 
   if (runtime.preparedOffer) {
-    setWebRtcPhase('offer-ready', 'Local offer is ready before the tunnel room is entered.', {
+    setWebRtcPhase('offer-ready', 'Local offer is ready before the tunnel code is entered.', {
       connecting: false,
     });
     return;
@@ -373,7 +373,7 @@ export async function ensureConnected(allowPrompt: boolean) {
   }
 }
 
-async function openConnection(room: string) {
+async function openConnection(code: string) {
   await primeWebRtc();
 
   const peerConnection = runtime.peerConnection;
@@ -385,11 +385,11 @@ async function openConnection(room: string) {
 
   setWebRtcPhase(
     'sending-offer',
-    'Sending the local offer through the gateway and waiting for the server answer.',
+    'Sending the local offer through the gateway and waiting for the tunnel answer.',
     { connecting: true },
   );
 
-  const answerText = await sendOffer(room, preparedOffer);
+  const answerText = await sendOffer(code, preparedOffer);
   const answer = JSON.parse(answerText);
   if (
     answer &&
@@ -400,7 +400,7 @@ async function openConnection(room: string) {
     throw new Error(answer.error);
   }
 
-  setWebRtcPhase('applying-answer', 'Applying the server answer.', { connecting: true });
+  setWebRtcPhase('applying-answer', 'Applying the tunnel answer.', { connecting: true });
   await peerConnection.setRemoteDescription(answer);
   setWebRtcPhase('opening-channel', 'Waiting for the keepalive data channel to open.', {
     connecting: true,
@@ -410,28 +410,28 @@ async function openConnection(room: string) {
   refreshPassivePhase();
 }
 
-export async function submitWebRtcPrompt(roomInput: string) {
-  const normalizedRoom = normalizeRoom(roomInput);
-  if (!normalizedRoom) {
-    failPhase('Tunnel room is required.', {
+export async function submitWebRtcPrompt(codeInput: string) {
+  const normalizedCode = normalizeCode(codeInput);
+  if (!normalizedCode) {
+    failPhase('Tunnel code is required.', {
       connecting: false,
     });
-    throw new Error('Tunnel room is required');
+    throw new Error('Tunnel code is required');
   }
 
-  if (connected() && getWebRtcState().room === normalizedRoom) {
+  if (connected() && getWebRtcState().code === normalizedCode) {
     return;
   }
 
-  if (runtime.connectPromise && getWebRtcState().room === normalizedRoom) {
+  if (runtime.connectPromise && getWebRtcState().code === normalizedCode) {
     return await runtime.connectPromise;
   }
 
   patchWebRtcState({
-    room: normalizedRoom,
+    code: normalizedCode,
     lastError: '',
   });
-  const attempt = openConnection(normalizedRoom);
+  const attempt = openConnection(normalizedCode);
   runtime.connectPromise = attempt;
   try {
     await attempt;

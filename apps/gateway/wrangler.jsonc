@@ -10,7 +10,7 @@
 	"migrations": [
 		{
 			"new_sqlite_classes": [
-				"Room"
+				"Code"
 			],
 			"tag": "v1"
 		}
@@ -18,8 +18,8 @@
 	"durable_objects": {
 		"bindings": [
 			{
-				"class_name": "Room",
-				"name": "ROOMS"
+				"class_name": "Code",
+				"name": "CODES"
 			}
 		]
 	},

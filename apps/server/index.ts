@@ -3,9 +3,9 @@ import { type RTCDataChannel, RTCPeerConnection } from 'werift';
 import {
   createRandomProof,
   iceGatherTimeoutMs,
-  isDomainRoom,
-  normalizeRoom,
-  roomFromProof,
+  isDomainCode,
+  normalizeCode,
+  codeFromProof,
   sha256HexFromText,
   toUint8Array,
   waitForIceGathering,
@@ -24,7 +24,7 @@ let connectionIdCounter = 0;
 let shuttingDown = false;
 
 type SessionDescription = { type: 'offer' | 'answer'; sdp: string };
-type CliOptions = { help: boolean; proof?: string; room?: string };
+type CliOptions = { help: boolean; proof?: string; code?: string };
 
 const errMsg = (e: unknown) => (e instanceof Error ? e.message : String(e));
 const delay = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
@@ -44,22 +44,22 @@ function parseCliOptions(args: string[]): CliOptions {
       options.help = true;
       continue;
     }
-    if (arg === '--proof' || arg === '--room') {
+    if (arg === '--proof' || arg === '--code') {
       const value = args[++i];
       if (!value) throw new Error(`Missing value for ${arg}`);
       if (arg === '--proof') options.proof = value;
-      else options.room = value;
+      else options.code = value;
       continue;
     }
     positional.push(arg);
   }
 
   if (!options.proof && positional.length > 0) {
-    if (!options.room && positional.length === 1 && isDomainRoom(positional[0]!)) {
-      options.room = positional[0]!;
+    if (!options.code && positional.length === 1 && isDomainCode(positional[0]!)) {
+      options.code = positional[0]!;
     } else {
       options.proof = positional[0]!;
-      if (!options.room && positional[1]) options.room = positional[1];
+      if (!options.code && positional[1]) options.code = positional[1];
     }
   }
 
@@ -225,12 +225,12 @@ async function handleOffer(offer: SessionDescription) {
   return JSON.stringify(localDescription);
 }
 
-async function processOffer(room: string, proof: string, offer: string) {
+async function processOffer(code: string, proof: string, offer: string) {
   try {
     const decoded = decodeOfferPayload(offer);
     const answer = await handleOffer(decoded.sessionDescription);
     const url = new URL('/acceptOffer', gatewayOrigin);
-    url.searchParams.set('room', room);
+    url.searchParams.set('code', code);
     url.searchParams.set('proof', proof);
     url.searchParams.set('offer', decoded.offerKey);
     url.searchParams.set('answer', answer);
@@ -257,16 +257,16 @@ async function* readLines(stream: ReadableStream<Uint8Array>) {
   if (trailing) yield trailing;
 }
 
-async function lookForOffers(room: string, proof: string) {
+async function lookForOffers(code: string, proof: string) {
   while (!shuttingDown) {
     try {
       const url = new URL('/lookForOffers', gatewayOrigin);
-      url.searchParams.set('room', room);
+      url.searchParams.set('code', code);
       url.searchParams.set('proof', proof);
       const res = await fetch(url, { headers: { accept: 'text/plain' } });
       if (!res.ok || !res.body) throw new Error(`Gateway returned ${res.status} ${res.statusText}`);
-      console.log(`[Gateway] Connected to ${url.origin} for room "${room}".`);
-      for await (const offer of readLines(res.body)) void processOffer(room, proof, offer);
+      console.log(`[Gateway] Connected to ${url.origin} for tunnel code "${code}".`);
+      for await (const offer of readLines(res.body)) void processOffer(code, proof, offer);
       if (!shuttingDown) console.warn('[Gateway] Offer stream closed. Reconnecting.');
     } catch (e) {
       if (shuttingDown) break;
@@ -316,35 +316,35 @@ if (!Deno.isatty(Deno.stdout.rid)) {
 
 const cliOptions = parseCliOptions(Deno.args);
 if (cliOptions.help) {
-  console.log('Usage: deno run -A apps/server/index.ts [proof] [room]');
-  console.log('       deno run -A apps/server/index.ts --proof <proof> [--room <room|domain>]');
+  console.log('Usage: deno run -A apps/server/index.ts [proof] [code]');
+  console.log('       deno run -A apps/server/index.ts --proof <proof> [--code <code|domain>]');
   Deno.exit(0);
 }
 
-let room = normalizeRoom(cliOptions.room || '');
+let code = normalizeCode(cliOptions.code || '');
 let proof = (cliOptions.proof || '').trim();
 
-if (isDomainRoom(room)) {
+if (isDomainCode(code)) {
   if (!proof) {
-    console.error('A proof is required when using a domain room.');
+    console.error('A proof is required when using a domain code.');
     Deno.exit(1);
   }
-} else if (room) {
-  const derivedRoom = await roomFromProof(proof);
-  if (!proof || room !== derivedRoom) {
-    console.error(`Proof does not map to room "${room}". Expected "${derivedRoom}".`);
+} else if (code) {
+  const derivedCode = await codeFromProof(proof);
+  if (!proof || code !== derivedCode) {
+    console.error(`Proof does not map to code "${code}". Expected "${derivedCode}".`);
     Deno.exit(1);
   }
 } else {
   proof ||= createRandomProof();
-  room = await roomFromProof(proof);
+  code = await codeFromProof(proof);
 }
 
-console.log(`[0k server] Room: ${room}`);
+console.log(`[0k server] Tunnel code: ${code}`);
 console.log(`[0k server] Proof: ${proof}`);
-if (isDomainRoom(room)) {
+if (isDomainCode(code)) {
   const proofHash = await sha256HexFromText(proof);
-  console.log(`[0k server] Publish this at https://${room}/0k-hash: ${proofHash}`);
+  console.log(`[0k server] Publish this at https://${code}/0k-hash: ${proofHash}`);
 }
 const onSignal = () => {
   shutdown();
@@ -352,5 +352,5 @@ const onSignal = () => {
 };
 Deno.addSignalListener('SIGINT', onSignal);
 Deno.addSignalListener('SIGTERM', onSignal);
-console.log(`[0k server] Waiting for offers for room "${room}".`);
-await lookForOffers(room, proof);
+console.log(`[0k server] Waiting for offers for tunnel code "${code}".`);
+await lookForOffers(code, proof);

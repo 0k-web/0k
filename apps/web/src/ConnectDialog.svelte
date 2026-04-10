@@ -1,4 +1,5 @@
 <script lang="ts">
+  import codehsScript from './assets/codehs-script.js?raw';
   import { finishWebRtcPromptClose, submitWebRtcPrompt } from './webrtc';
   import { getWebRtcState } from './webrtc-state.svelte';
 
@@ -6,7 +7,7 @@
 
   let dialog = $state<HTMLDialogElement | undefined>();
   let input = $state<HTMLInputElement | undefined>();
-  let room = $state(webrtc.room);
+  let code = $state(webrtc.code);
 
   const buttonLabel = $derived.by(() => {
     if (!webrtc.connecting) {
@@ -32,7 +33,7 @@
   const submit = async (event: SubmitEvent) => {
     event.preventDefault();
     try {
-      await submitWebRtcPrompt(room.trim());
+      await submitWebRtcPrompt(code.trim());
       dialog?.close('connected');
     } catch {
       input?.focus();
@@ -59,9 +60,9 @@
     <div class="input-wrap">
       <input
         bind:this={input}
-        bind:value={room}
+        bind:value={code}
         type="text"
-        name="room"
+        name="code"
         placeholder="Tunnel code"
         autocomplete="off"
         spellcheck="false"
@@ -69,14 +70,45 @@
       />
       <button type="submit" class="connect" disabled={webrtc.connecting}>{buttonLabel}</button>
     </div>
-    <div class="below">
-      {#if webrtc.lastError}
-        <p class="error">{webrtc.lastError}</p>
-      {:else}
-        <small>{webrtc.detail}</small>
-      {/if}
-    </div>
   </form>
+  <div class="below">
+    {#if webrtc.lastError}
+      <p class="error">{webrtc.lastError}</p>
+    {:else}
+      <small>{webrtc.detail}</small>
+    {/if}
+  </div>
+  <div class="instructions">
+    <p class="title">How to start a tunnel</p>
+
+    <p class="option">Standalone (home PC / Codespaces / server)</p>
+    <p>
+      Download and run the tunnel executable for your operating system from
+      <a href="https://github.com/0k-web/0k/releases/tag/latest">GitHub Releases</a>. Or just run
+      <code>npx @0k-web/server</code>.
+    </p>
+
+    <p class="option">CodeHS</p>
+    <p>
+      Create a <a href="https://codehs.com/sandbox">CodeHS "JavaScript Console" sandbox</a>, click
+      <button onclick={() => navigator.clipboard.writeText(codehsScript)}>here</button> to copy, then
+      paste and run.
+    </p>
+
+    <p class="option">Server</p>
+    <p>
+      Learn how to run a dedicated 0K tunnel <a
+        href="https://github.com/0k-web/0k/blob/main/dedicated-tunnel.md">here</a
+      >.
+    </p>
+
+    <p class="option">Personal browser relay</p>
+    <p>
+      Keep
+      <code>RELAY_URL_TODO</code>
+      open on a personal device.
+    </p>
+  </div>
 </dialog>
 
 <style>
@@ -110,7 +142,6 @@
   form {
     display: flex;
     flex-direction: column;
-    gap: 0.625rem;
   }
 
   .input-wrap {
@@ -155,6 +186,7 @@
   .below {
     text-align: center;
     min-height: 1rem;
+    margin-top: 0.625rem;
     padding-inline: 0.25rem;
     font-size: 0.8rem;
     line-height: 1;
@@ -185,5 +217,36 @@
     to {
       opacity: 1;
     }
+  }
+
+  .instructions {
+    margin-top: 2rem;
+    max-height: 10rem;
+    overflow: auto;
+    padding: 1rem;
+    border-radius: 1rem;
+    background: var(--m3c-surface-container-low);
+    font-size: 0.825rem;
+    color: var(--m3c-on-surface-variant);
+  }
+  .title,
+  .option {
+    font-weight: 600;
+    color: var(--m3c-on-surface);
+  }
+  .instructions .option {
+    margin-top: 1rem;
+  }
+  .instructions a,
+  .instructions button {
+    color: var(--m3c-primary);
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  .instructions code {
+    background: var(--m3c-surface-container-highest);
+    padding: 0 0.25em;
+    border-radius: 0.25rem;
+    font-size: 0.875em;
   }
 </style>
