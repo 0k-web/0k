@@ -148,7 +148,6 @@ jobs:
             --verify-tag \
             --latest \
             --title "$TAG" \
-            --notes-file .github/latest-release-notes.md \
             selfhost-0k.zip \
             selfhost-0k-assets-statically.zip \
             selfhost-0k-assets-colocated.zip \

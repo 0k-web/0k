@@ -1,8 +1,24 @@
-# [Launch 0K](https://github.com/0k-web/0k/releases/tag/latest)
+# [Launch 0K](https://cdn.jsdelivr.net/gh/0k-web/builds@main/jsdelivr/index.svg)
+<!-- purge https://www.jsdelivr.com/tools/purge -->
+<!-- https://cdn.statically.io/gh/0k-web/builds@main/jsdelivr/index.svg -->
 
 0K can connect directly to GitHub, open a downloaded website, or access the rest of the internet via WebRTC.
 
 It does all of this at absolute zero: 0K is distributed in static, frozen (heh) form.
+
+## Download 0K's tunnel server
+
+[Windows](https://github.com/0k-web/0k/releases/download/latest/tunnel-0k-windows-x64.exe)
+
+[Mac](https://github.com/0k-web/0k/releases/download/latest/tunnel-0k-mac-arm64) (or [Intel Mac](https://github.com/0k-web/0k/releases/download/latest/tunnel-0k-mac-x64))
+
+[Linux](https://github.com/0k-web/0k/releases/download/latest/tunnel-0k-linux-x64) (or [ARM Linux](https://github.com/0k-web/0k/releases/download/latest/tunnel-0k-linux-arm64))
+
+## Self host 0K
+
+[Download](https://github.com/0k-web/0k/releases/download/latest/selfhost-0k.zip) 0K and host it on any static hosting service, from CodeHS and Techsmart, to Google Cloud Storage and S3, Firebase Hosting and Render Static, or even pages.gay and IPFS.
+
+(That is via jsDelivr; [this version](https://github.com/0k-web/0k/releases/download/latest/selfhost-0k-assets-statically.zip) uses Statically, and [this version](https://github.com/0k-web/0k/releases/download/latest/selfhost-0k-assets-colocated.zip) includes assets.)
 
 ## The zen of 0K / 0K from first principles
 
