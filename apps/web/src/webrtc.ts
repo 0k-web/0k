@@ -201,7 +201,7 @@ function refreshPassivePhase() {
     setWebRtcPhase(
       'waiting-for-code',
       runtime.preparedOffer
-        ? 'Local offer is ready. Enter the tunnel code to connect.'
+        ? "0K is free and reliable because it routes your internet through tunnels. Enter your tunnel's code."
         : 'Preparing the local offer while you enter the tunnel code.',
       { connecting: false },
     );
