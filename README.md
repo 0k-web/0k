@@ -6,7 +6,7 @@
 
 It does all of this at absolute zero: 0K is distributed in static, frozen (heh) form.
 
-## Download 0K's tunnel server
+## Download 0K's tunnel
 
 [Windows](https://github.com/0k-web/0k/releases/download/latest/tunnel-0k-windows-x64.exe)
 
