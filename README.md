@@ -6,20 +6,6 @@
 
 It does all of this at absolute zero: 0K is distributed in static, frozen (heh) form.
 
-## Download 0K's tunnel
-
-[Windows](https://github.com/0k-web/0k/releases/download/latest/tunnel-0k-windows-x64.exe)
-
-[Mac](https://github.com/0k-web/0k/releases/download/latest/tunnel-0k-mac-arm64) (or [Intel Mac](https://github.com/0k-web/0k/releases/download/latest/tunnel-0k-mac-x64))
-
-[Linux](https://github.com/0k-web/0k/releases/download/latest/tunnel-0k-linux-x64) (or [ARM Linux](https://github.com/0k-web/0k/releases/download/latest/tunnel-0k-linux-arm64))
-
-## Self host 0K
-
-[Download](https://github.com/0k-web/0k/releases/download/latest/selfhost-0k.zip) 0K and host it on any static hosting service, from CodeHS and Techsmart, to Google Cloud Storage and S3, Firebase Hosting and Render Static, or even pages.gay and IPFS.
-
-(That is via jsDelivr; [this version](https://github.com/0k-web/0k/releases/download/latest/selfhost-0k-assets-statically.zip) uses Statically, and [this version](https://github.com/0k-web/0k/releases/download/latest/selfhost-0k-assets-colocated.zip) includes assets.)
-
 ## The zen of 0K / 0K from first principles
 
 Every site like 0K faces two problems: hosting itself, and tunneling traffic.
@@ -39,6 +25,20 @@ There's a trend to use static hosting on shared domains, but still tunnel throug
 These tunnels cost money, effort, and could be blocked if filters started respecting the PSL or detecting AI-generated placeholders.
 
 If 0K can reach shared domains, it can reach the internet: reaching a CDN = reaching GitHub websites, and reaching Google AMP = reaching through a tunnel to the rest of the internet.
+
+## Self host 0K
+
+[Download](https://github.com/0k-web/0k/releases/download/latest/selfhost-0k.zip) 0K and host it on any static hosting service, from CodeHS and Techsmart, to Google Cloud Storage and S3, Firebase Hosting and Render Static, or even pages.gay and IPFS.
+
+(That is via jsDelivr; [this version](https://github.com/0k-web/0k/releases/download/latest/selfhost-0k-assets-statically.zip) uses Statically, and [this version](https://github.com/0k-web/0k/releases/download/latest/selfhost-0k-assets-colocated.zip) includes assets.)
+
+## Download 0K's tunnel
+
+[Windows](https://github.com/0k-web/0k/releases/download/latest/tunnel-0k-windows-x64.exe)
+
+[Mac](https://github.com/0k-web/0k/releases/download/latest/tunnel-0k-mac-arm64) (or [Intel Mac](https://github.com/0k-web/0k/releases/download/latest/tunnel-0k-mac-x64))
+
+[Linux](https://github.com/0k-web/0k/releases/download/latest/tunnel-0k-linux-x64) (or [ARM Linux](https://github.com/0k-web/0k/releases/download/latest/tunnel-0k-linux-arm64))
 
 ## Credits
 
