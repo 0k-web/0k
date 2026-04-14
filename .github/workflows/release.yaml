@@ -156,3 +156,7 @@ jobs:
             tunnel-0k-mac-arm64 \
             tunnel-0k-mac-x64 \
             tunnel-0k-windows-x64.exe
+      - name: Purge jsDelivr cache
+        run: |
+          curl "https://purge.jsdelivr.net/gh/0k-web/builds@main/jsdelivr/index.svg"
+          curl "https://purge.jsdelivr.net/gh/0k-web/builds@main/jsdelivr/sw.js"
