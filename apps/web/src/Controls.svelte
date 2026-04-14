@@ -42,13 +42,13 @@
         if (e.key == 'Enter') {
           let url = e.currentTarget.value.trim();
 
-          const hasScheme = /^[a-zA-Z][a-zA-Z\d+\-.]*:/.test(url);
-          if (!hasScheme) {
-            if (/\s/.test(url)) {
-              url = `https://duckduckgo.com/?q=${encodeURIComponent(url)}`;
-            } else if (url.includes('.')) {
-              url = `https://${url}`;
-            } else {
+          try {
+            url = new URL(url).href;
+          } catch {
+            try {
+              if (!url.includes('.')) throw new Error("can't convert to url this way");
+              url = new URL(`https://${url}`).href;
+            } catch {
               url = `https://duckduckgo.com/?q=${encodeURIComponent(url)}`;
             }
           }
