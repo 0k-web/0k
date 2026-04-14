@@ -9,8 +9,8 @@
   }}
   {@attach (node) => node.showModal()}
 >
-  <p>0K might not work in non-Chromium browsers. Try Chrome.</p>
-  <form method="dialog"><button>Use anyway</button></form>
+  <p>Are you sure you want to use 0K in this browser? It works best in Chrome.</p>
+  <form method="dialog"><button>Continue anyway</button></form>
 </dialog>
 
 <style>
