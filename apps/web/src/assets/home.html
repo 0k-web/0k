@@ -126,12 +126,4 @@
   window.addEventListener('resize', schedule);
   scheme.addEventListener('change', schedule);
   schedule();
-
-  if (!navigator.userAgent.toLowerCase().includes('chrome')) {
-    const warning = document.createElement('p');
-    warning.innerText = '⚠️ 0K might not work in non-Chromium browsers; try Chrome';
-    warning.style.marginTop = 'auto';
-    warning.style.padding = '0.5rem';
-    document.body.append(warning);
-  }
 </script>
