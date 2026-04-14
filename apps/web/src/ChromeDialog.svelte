@@ -26,7 +26,7 @@
     text-align: center;
     background-color: var(--m3c-surface-container-highest);
     color: var(--m3c-on-surface);
-    max-width: 20rem;
+    max-width: 25rem;
   }
   dialog::backdrop {
     background-color: oklch(from var(--m3c-scrim) l c h / 0.5);
