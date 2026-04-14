@@ -95,6 +95,7 @@ export default defineConfig({
         index: 'index.html',
       },
     },
+    target: 'es2025',
   },
   plugins: [
     svelte(),
