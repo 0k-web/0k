@@ -8,6 +8,10 @@ console.log('Creating socket...');
 const ws = new WebSocket(
   `wss://scalinghub.codehs.com/user/${uid}/spawn/?watch=true&EIO=3&transport=websocket`,
 );
+ws.onclose = (/** @type {CloseEvent} */ event) => {
+  console.log(`Closed: ${event.code}`);
+};
+
 /**
  * @param {string} command
  * @param {*} data
@@ -37,7 +41,8 @@ await /** @type {Promise<void>} */ (
 
 console.log('Installing server...');
 wsSend('transfer', {
-  'run.sh': `mkdir -p /tmp/proj
+  'run.sh': `echo Starting server...
+mkdir -p /tmp/proj
 cd /tmp/proj
 
 curl -fsSL https://github.com/0k-web/0k/releases/download/latest/tunnel-0k-linux-x64 -o /tmp/tunnel-0k
@@ -45,8 +50,15 @@ chmod +x /tmp/tunnel-0k
 /tmp/tunnel-0k
 `,
 });
+await /** @type {Promise<void>} */ (
+  new Promise((resolve) => {
+    ws.onmessage = (msg) => {
+      if (msg.data == `42["transferComplete",null]`) resolve();
+    };
+  })
+);
 
-console.log('Starting server...');
+console.log('Requesting start...');
 wsSend('spawn', {
   cmd: 'bash',
   args: ['run.sh'],
