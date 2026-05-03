@@ -129,21 +129,14 @@ jobs:
         working-directory: apps/web/dist
         run: zip -r ../../../selfhost-0k-assets-colocated.zip .
 
-      - name: Compile server
-        working-directory: apps/server
-        run: pnpm compile
-      - name: Copy compiled server
-        run: cp /tmp/tunnel-0k-linux-arm64 /tmp/tunnel-0k-linux-x64 /tmp/tunnel-0k-mac-arm64 /tmp/tunnel-0k-mac-x64 /tmp/tunnel-0k-windows-x64.exe .
-
       - name: Build for IPFS
         run: ZERO_K_DEFAULT_GITHUB_BEHAVIOR=githubusercontent ZERO_K_INDEX_FORMAT=html pnpm build
       - name: Upload to IPFS
-        id: upload
         env:
           PINATA_JWT: ${{ secrets.PINATA_JWT }}
         run: |
-          CID=$(node --input-type=module -e "
-            import { readFileSync, readdirSync } from 'fs';
+          node --input-type=module -e "
+            import { readFileSync, readdirSync, writeFileSync } from 'fs';
             import { join, relative } from 'path';
             const files = [];
             function walk(dir) {
@@ -165,18 +158,22 @@ jobs:
               body: form,
             });
             const json = await res.json();
-            console.log(json.IpfsHash);
-          ")
-          if [ -z "$CID" ]; then
-            echo "ERROR: Failed to get CID from Pinata"
-            exit 1
-          fi
-          echo "cid=$CID" >> $GITHUB_OUTPUT
+            if (!json.IpfsHash) {
+              console.error('Pinata response:', JSON.stringify(json));
+              process.exit(1);
+            }
+            writeFileSync('/tmp/cid', json.IpfsHash);
+          "
       - name: Point IPNS
-        id: point
         env:
           IPNS_KEY: ${{ secrets.IPNS_KEY }}
-        run: echo "url=$(npx point-ipns ${{ steps.upload.outputs.cid }})" >> $GITHUB_OUTPUT
+        run: echo "url=$(npx point-ipns $(cat /tmp/cid))" >> $GITHUB_OUTPUT
+
+      - name: Compile server
+        working-directory: apps/server
+        run: pnpm compile
+      - name: Copy compiled server
+        run: cp /tmp/tunnel-0k-linux-arm64 /tmp/tunnel-0k-linux-x64 /tmp/tunnel-0k-mac-arm64 /tmp/tunnel-0k-mac-x64 /tmp/tunnel-0k-windows-x64.exe .
 
       - name: Attest release artifacts
         uses: actions/attest@v4
