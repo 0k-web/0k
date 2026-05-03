@@ -137,13 +137,37 @@ jobs:
 
       - name: Build for IPFS
         run: ZERO_K_DEFAULT_GITHUB_BEHAVIOR=githubusercontent ZERO_K_INDEX_FORMAT=html pnpm build
-      - name: Create .car
-        run: echo "IPFS_CID=$(npx ipfs-car pack apps/web/dist --output dist.car)" >> $GITHUB_ENV
-      - name: Upload to Pinata
+      - name: Upload to IPFS
+        id: upload
+        env:
+          PINATA_JWT: ${{ secrets.PINATA_JWT }}
         run: |
-          echo "PINATA_RESPONSE=$(curl -s -X POST https://uploads.pinata.cloud/v3/files \
-            -H 'Authorization: Bearer ${{ secrets.PINATA_JWT }}' \
-            -F 'file=@dist.car' -F 'car=true' -F 'network=public')" >> $GITHUB_ENV
+          CID=$(node -e "
+            import { readFileSync, readdirSync, statSync } from 'fs';
+            import { join, relative } from 'path';
+            const files = [];
+            function walk(dir) {
+              for (const e of readdirSync(dir, { withFileTypes: true })) {
+                const p = join(dir, e.name);
+                if (e.isDirectory()) walk(p); else files.push(p);
+              }
+            }
+            walk('dist');
+            const form = new FormData();
+            for (const f of files) {
+              form.append('file', new Blob([readFileSync(f)]), relative('dist', f));
+            }
+            form.append('pinataMetadata', JSON.stringify({ name: 'deploy-' + Date.now() }));
+            form.append('pinataOptions', JSON.stringify({ cidVersion: 1 }));
+            const res = await fetch('https://api.pinata.cloud/pinning/pinFileToIPFS', {
+              method: 'POST',
+              headers: { Authorization: 'Bearer ' + process.env.PINATA_JWT },
+              body: form,
+            });
+            const json = await res.json();
+            console.log(json.IpfsHash);
+          ")
+          echo "cid=$CID" >> $GITHUB_OUTPUT
       - name: Point IPNS
         id: point
         env:
