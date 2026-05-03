@@ -60,7 +60,7 @@ jobs:
           cp apps/web/dist/sw.js builds-repo/jsdelivr/sw.js
 
       - name: Build esm.sh HTML
-        run: ZERO_K_CDN=esmsh ZERO_K_DEFAULT_GITHUB_BEHAVIOR=esmsh ZERO_K_INDEX_FORMAT=html pnpm build
+        run: ZERO_K_CDN=esmsh ZERO_K_DEFAULT_GITHUB_BEHAVIOR=githubusercontent ZERO_K_INDEX_FORMAT=html pnpm build
       - name: Copy esm.sh HTML
         run: |
           mkdir -p builds-repo/esm.sh
@@ -112,7 +112,7 @@ jobs:
         run: zip -r ../../../selfhost-0k.zip .
 
       - name: Build selfhost-0k-assets-esmsh.zip
-        run: ZERO_K_CDN=esmsh ZERO_K_DEFAULT_GITHUB_BEHAVIOR=esmsh pnpm build
+        run: ZERO_K_CDN=esmsh ZERO_K_DEFAULT_GITHUB_BEHAVIOR=githubusercontent pnpm build
       - name: Zip selfhost-0k-assets-esmsh.zip
         working-directory: apps/web/dist
         run: zip -r ../../../selfhost-0k-assets-esmsh.zip .
