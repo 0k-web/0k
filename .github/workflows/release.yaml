@@ -168,7 +168,7 @@ jobs:
       - name: Point IPNS
         env:
           IPNS_KEY: ${{ secrets.IPNS_KEY }}
-        run: echo "url=$(npx point-ipns $(cat /tmp/cid))" >> $GITHUB_OUTPUT
+        run: npx point-ipns $(cat /tmp/cid)
 
       - name: Compile server
         working-directory: apps/server
