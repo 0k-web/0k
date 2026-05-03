@@ -2,7 +2,7 @@ import { readFile } from 'node:fs/promises';
 import { basename, resolve } from 'node:path';
 import type { Plugin } from 'vite';
 
-type WebAssetSource = 'local' | 'jsdelivr' | 'statically';
+type WebAssetSource = 'local' | 'jsdelivr' | 'esmsh' | 'statically';
 type PackageAsset = {
   packageName: string;
   file: string;
@@ -60,7 +60,9 @@ const cdnUrl = (a: PackageAsset) => {
   const v = versions.get(a.packageName)!;
   return WEB_ASSET_SOURCE == 'jsdelivr'
     ? `https://cdn.jsdelivr.net/npm/${a.packageName}@${v}/${a.file}`
-    : `https://cdn.statically.io/npm/${a.packageName}@${v}/${a.file}`;
+    : WEB_ASSET_SOURCE == 'esmsh'
+      ? `https://esm.sh/${a.packageName}@${v}/${a.file}?raw`
+      : `https://cdn.statically.io/npm/${a.packageName}@${v}/${a.file}`;
 };
 
 export const webAssets = ({ canExternalize = true }: WebAssetsOptions = {}): Plugin => {

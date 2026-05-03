@@ -1,10 +1,11 @@
-const GITHUB_BEHAVIOR_VALUES = ['githubusercontent', 'jsdelivr', 'statically', 'off'] as const;
+const GITHUB_BEHAVIOR_VALUES = ['githubusercontent', 'jsdelivr', 'esmsh', 'statically', 'off'] as const;
 type GitHubBehavior = (typeof GITHUB_BEHAVIOR_VALUES)[number];
 
 const GITHUB_BEHAVIOR_LABELS: Record<GitHubBehavior, string> = {
   githubusercontent: 'Via raw.githubusercontent.com',
   jsdelivr: 'Via cdn.jsdelivr.net',
   statically: 'Via cdn.statically.io',
+  esmsh: 'Via esm.sh',
   off: 'Off',
 };
 

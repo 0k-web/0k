@@ -10,6 +10,7 @@ import {
   rawGithubusercontentCom,
   cdnJsdelivrNet,
   cdnStaticallyIo,
+  cdnEsmSh,
   makeBody,
 } from './transport-logic+';
 import { keyGitHubBehavior } from './settings/settingsLocalStorage';
@@ -50,7 +51,9 @@ export class ZeroKTransport implements ProxyTransport {
           ? cdnJsdelivrNet
           : githubBehavior == 'statically'
             ? cdnStaticallyIo
-            : undefined;
+            : githubBehavior == 'esmsh'
+              ? cdnEsmSh
+              : undefined;
 
     const isLocalSite = method == 'GET' && remote.host.endsWith('.0k');
     const isPassthrough = method == 'GET' && remote.host == 'fonts.googleapis.com';

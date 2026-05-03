@@ -1,4 +1,4 @@
-type GitHubBehavior = 'githubusercontent' | 'jsdelivr' | 'statically' | 'off';
+type GitHubBehavior = 'githubusercontent' | 'jsdelivr' | 'esmsh' | 'statically' | 'off';
 
 declare global {
   var $scramjet: typeof import('@mercuryworkshop/scramjet');

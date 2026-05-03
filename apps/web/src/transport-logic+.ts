@@ -17,3 +17,5 @@ export const cdnJsdelivrNet = (repo: string, refAndPath: string) =>
   `https://cdn.jsdelivr.net/gh/${repo}@${refAndPath}`;
 export const cdnStaticallyIo = (repo: string, refAndPath: string) =>
   `https://cdn.statically.io/gh/${repo}@${refAndPath}`;
+export const cdnEsmSh = (repo: string, refAndPath: string) =>
+  `https://esm.sh/gh/${repo}@${refAndPath}?raw`;
