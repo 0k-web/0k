@@ -21,7 +21,7 @@ If you want a Dockerfile, this is it:
 ```dockerfile
 FROM debian:bookworm-slim
 RUN apt-get update && apt-get install -y ca-certificates && rm -rf /var/lib/apt/lists/*
-ADD https://github.com/0k-web/0k/releases/latest/download/tunnel-0k-linux-x64 /usr/local/bin/0k-server
+ADD https://github.com/abndnce/0k/releases/latest/download/tunnel-0k-linux-x64 /usr/local/bin/0k-server
 RUN chmod +x /usr/local/bin/0k-server
 ENTRYPOINT ["0k-server", "--proof", "[INSERT YOUR PROOF HERE]", "--code", "[INSERT YOUR TUNNEL CODE HERE]"]
 ```

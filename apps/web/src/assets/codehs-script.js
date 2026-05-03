@@ -45,7 +45,7 @@ wsSend('transfer', {
 mkdir -p /tmp/proj
 cd /tmp/proj
 
-curl -fsSL https://github.com/0k-web/0k/releases/download/latest/tunnel-0k-linux-x64 -o /tmp/tunnel-0k
+curl -fsSL https://github.com/abndnce/0k/releases/download/latest/tunnel-0k-linux-x64 -o /tmp/tunnel-0k
 chmod +x /tmp/tunnel-0k
 /tmp/tunnel-0k
 `,

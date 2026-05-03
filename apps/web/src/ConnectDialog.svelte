@@ -84,7 +84,7 @@
     <p class="option">Standalone (home PC / Codespaces)</p>
     <p>
       Download and run the tunnel executable for your operating system from
-      <a href="https://github.com/0k-web/0k#download-0ks-tunnel">GitHub</a>. Or just run
+      <a href="https://github.com/abndnce/0k#download-0ks-tunnel">GitHub</a>. Or just run
       <code>npx @0k-web/server</code>.
     </p>
 
@@ -100,7 +100,7 @@
     <p class="option">Server</p>
     <p>
       Learn how to run a dedicated 0K tunnel <a
-        href="https://github.com/0k-web/0k/blob/main/dedicated-tunnel.md"
+        href="https://github.com/abndnce/0k/blob/main/dedicated-tunnel.md"
         target="_blank">here</a
       >.
     </p>

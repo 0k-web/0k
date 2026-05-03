@@ -27,17 +27,17 @@ If 0K can reach shared domains, it can reach the internet: reaching a CDN = reac
 
 ## Self host 0K
 
-[Download](https://github.com/0k-web/0k/releases/download/latest/selfhost-0k.zip) 0K and host it on any static hosting service, from CodeHS and Techsmart, to Google Cloud Storage and S3, Firebase Hosting and Render Static, or even pages.gay and IPFS.
+[Download](https://github.com/abndnce/0k/releases/download/latest/selfhost-0k.zip) 0K and host it on any static hosting service, from CodeHS and Techsmart, to Google Cloud Storage and S3, Firebase Hosting and Render Static, or even pages.gay and IPFS.
 
-(That is via jsDelivr; [this version](https://github.com/0k-web/0k/releases/download/latest/selfhost-0k-assets-statically.zip) uses Statically, and [this version](https://github.com/0k-web/0k/releases/download/latest/selfhost-0k-assets-colocated.zip) includes assets.)
+(That is via jsDelivr; [this version](https://github.com/abndnce/0k/releases/download/latest/selfhost-0k-assets-statically.zip) uses Statically, and [this version](https://github.com/abndnce/0k/releases/download/latest/selfhost-0k-assets-colocated.zip) includes assets.)
 
 ## Download 0K's tunnel
 
-[Windows](https://github.com/0k-web/0k/releases/download/latest/tunnel-0k-windows-x64.exe)
+[Windows](https://github.com/abndnce/0k/releases/download/latest/tunnel-0k-windows-x64.exe)
 
-[Mac](https://github.com/0k-web/0k/releases/download/latest/tunnel-0k-mac-arm64) (or [Intel Mac](https://github.com/0k-web/0k/releases/download/latest/tunnel-0k-mac-x64))
+[Mac](https://github.com/abndnce/0k/releases/download/latest/tunnel-0k-mac-arm64) (or [Intel Mac](https://github.com/abndnce/0k/releases/download/latest/tunnel-0k-mac-x64))
 
-[Linux](https://github.com/0k-web/0k/releases/download/latest/tunnel-0k-linux-x64) (or [ARM Linux](https://github.com/0k-web/0k/releases/download/latest/tunnel-0k-linux-arm64))
+[Linux](https://github.com/abndnce/0k/releases/download/latest/tunnel-0k-linux-x64) (or [ARM Linux](https://github.com/abndnce/0k/releases/download/latest/tunnel-0k-linux-arm64))
 
 ## Credits
 

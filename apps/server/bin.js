@@ -32,7 +32,7 @@ if (!binaryName) {
 const cacheDir = cachedir('0k');
 mkdirSync(cacheDir, { recursive: true });
 
-const url = `https://github.com/0k-web/0k/releases/latest/download/${binaryName}`;
+const url = `https://github.com/abndnce/0k/releases/latest/download/${binaryName}`;
 const head = await fetch(url, { method: 'HEAD', redirect: 'follow' });
 if (!head.ok) throw new Error(`Failed to check for updates (${head.status})`);
 
