@@ -147,8 +147,9 @@ jobs:
             }
             walk('apps/web/dist');
             const form = new FormData();
+            const folder = `deploy-${new Date().toISOString()}/`;
             for (const f of files) {
-              form.append('file', new Blob([readFileSync(f)]), relative('apps/web/dist', f));
+              form.append('file', new Blob([readFileSync(f)]), folder + relative('apps/web/dist', f));
             }
             form.append('pinataMetadata', JSON.stringify({ name: 'deploy-' + Date.now() }));
             form.append('pinataOptions', JSON.stringify({ cidVersion: 1 }));
