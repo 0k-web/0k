@@ -9,7 +9,7 @@ import {
 
 const textEncoder = new TextEncoder();
 
-const ALLOWED_ORIGINS = ['https://0k-web.github.io', /^http:\/\/localhost(:\d+)?$/] as const;
+const ALLOWED_ORIGINS = ['https://abndnce.github.io', /^http:\/\/localhost(:\d+)?$/] as const;
 const CORS_HEADERS = {
   'access-control-allow-headers': 'content-type',
   'access-control-expose-headers': 'content-type',

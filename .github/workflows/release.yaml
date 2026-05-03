@@ -28,7 +28,7 @@ jobs:
       - name: Checkout relay repo
         uses: actions/checkout@v4
         with:
-          repository: 0k-web/relay
+          repository: abndnce/relay
           token: ${{ secrets.RELAY_PAT }}
           path: relay-repo
 
