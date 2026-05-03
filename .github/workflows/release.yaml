@@ -142,8 +142,8 @@ jobs:
         env:
           PINATA_JWT: ${{ secrets.PINATA_JWT }}
         run: |
-          CID=$(node -e "
-            import { readFileSync, readdirSync, statSync } from 'fs';
+          CID=$(node --input-type=module -e "
+            import { readFileSync, readdirSync } from 'fs';
             import { join, relative } from 'path';
             const files = [];
             function walk(dir) {
@@ -167,6 +167,10 @@ jobs:
             const json = await res.json();
             console.log(json.IpfsHash);
           ")
+          if [ -z "$CID" ]; then
+            echo "ERROR: Failed to get CID from Pinata"
+            exit 1
+          fi
           echo "cid=$CID" >> $GITHUB_OUTPUT
       - name: Point IPNS
         id: point
