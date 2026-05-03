@@ -152,10 +152,10 @@ jobs:
                 if (e.isDirectory()) walk(p); else files.push(p);
               }
             }
-            walk('dist');
+            walk('apps/web/dist');
             const form = new FormData();
             for (const f of files) {
-              form.append('file', new Blob([readFileSync(f)]), relative('dist', f));
+              form.append('file', new Blob([readFileSync(f)]), relative('apps/web/dist', f));
             }
             form.append('pinataMetadata', JSON.stringify({ name: 'deploy-' + Date.now() }));
             form.append('pinataOptions', JSON.stringify({ cidVersion: 1 }));
@@ -172,7 +172,7 @@ jobs:
         id: point
         env:
           IPNS_KEY: ${{ secrets.IPNS_KEY }}
-        run: echo "url=$(npx point-ipns $IPFS_CID)" >> $GITHUB_OUTPUT
+        run: echo "url=$(npx point-ipns ${{ steps.upload.outputs.cid }})" >> $GITHUB_OUTPUT
 
       - name: Attest release artifacts
         uses: actions/attest@v4
