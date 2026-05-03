@@ -21,7 +21,7 @@ jobs:
       - name: Checkout builds repo
         uses: actions/checkout@v4
         with:
-          repository: 0k-web/builds
+          repository: abndnce/b0k
           token: ${{ secrets.BUILDS_PAT }}
           path: builds-repo
 
@@ -158,5 +158,5 @@ jobs:
             tunnel-0k-windows-x64.exe
       - name: Purge jsDelivr cache
         run: |
-          curl "https://purge.jsdelivr.net/gh/0k-web/builds@main/jsdelivr/index.svg"
-          curl "https://purge.jsdelivr.net/gh/0k-web/builds@main/jsdelivr/sw.js"
+          curl "https://purge.jsdelivr.net/gh/abndnce/b0k@main/jsdelivr/index.svg"
+          curl "https://purge.jsdelivr.net/gh/abndnce/b0k@main/jsdelivr/sw.js"

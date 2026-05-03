@@ -1,5 +1,5 @@
-# [Launch 0K](https://cdn.jsdelivr.net/gh/0k-web/builds@main/jsdelivr/index.svg)
-<!-- https://cdn.statically.io/gh/0k-web/builds@main/jsdelivr/index.svg -->
+# [Launch 0K](https://cdn.jsdelivr.net/gh/abndnce/b0k@main/jsdelivr/index.svg)
+<!-- https://cdn.statically.io/gh/abndnce/b0k@main/jsdelivr/index.svg -->
 
 0K can connect directly to GitHub, open a downloaded website, or access the rest of the internet via WebRTC.
 
