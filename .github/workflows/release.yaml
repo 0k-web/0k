@@ -147,7 +147,7 @@ jobs:
             }
             walk('apps/web/dist');
             const form = new FormData();
-            const folder = \`deploy-${new Date().toISOString()}/\`;
+            const folder = \`deploy-\${new Date().toISOString()}/\`;
             for (const f of files) {
               form.append('file', new Blob([readFileSync(f)]), folder + relative('apps/web/dist', f));
             }
