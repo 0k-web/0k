@@ -1,4 +1,4 @@
-# [Launch 0K](https://cdn.jsdelivr.net/gh/abndnce/b0k@main/jsdelivr/index.svg) ([esm.sh](https://raw.esm.sh/gh/abndnce/b0k@main/esm.sh/index.html), [IPFS](https://ipfs.io/ipns/k51qzi5uqu5dgn54ka0d91se4ytmy9uiend9pk4zfuwroenqhwllm05hzwuac6/), [IPFS 2](https://k51qzi5uqu5dgn54ka0d91se4ytmy9uiend9pk4zfuwroenqhwllm05hzwuac6.ipns.dweb.link/))
+# [Launch 0K](https://cdn.jsdelivr.net/gh/abndnce/b0k@main/jsdelivr/index.svg) ([esm.sh](https://raw.esm.sh/gh/abndnce/b0k@main/esm.sh/index.html), [IPFS 1](https://ipfs.io/ipns/k51qzi5uqu5dgn54ka0d91se4ytmy9uiend9pk4zfuwroenqhwllm05hzwuac6/)/[2](https://k51qzi5uqu5dgn54ka0d91se4ytmy9uiend9pk4zfuwroenqhwllm05hzwuac6.ipns.dweb.link/), [self host](https://abndnce.github.io/#other))
 <!-- https://cdn.statically.io/gh/abndnce/b0k@main/jsdelivr/index.svg -->
 
 0K can connect directly to GitHub, open a downloaded website, or access the rest of the internet via WebRTC.
@@ -24,12 +24,6 @@ There's a trend to use static hosting on shared domains, but still tunnel throug
 These tunnels cost money, effort, and could be blocked if filters started respecting the PSL or detecting AI-generated placeholders.
 
 If 0K can reach shared domains, it can reach the internet: reaching a CDN = reaching GitHub websites, and reaching Google AMP = reaching through a tunnel to the rest of the internet.
-
-## Self host 0K
-
-[Download](https://github.com/abndnce/0k/releases/download/latest/selfhost-0k.zip) 0K and host it on any static hosting service, from CodeHS and Techsmart, to Google Cloud Storage and S3, Firebase Hosting and Render Static, or even pages.gay and IPFS.
-
-(That is via jsDelivr; [this version](https://github.com/abndnce/0k/releases/download/latest/selfhost-0k-assets-esmsh.zip) uses esm.sh, [this version](https://github.com/abndnce/0k/releases/download/latest/selfhost-0k-assets-statically.zip) uses Statically, and [this version](https://github.com/abndnce/0k/releases/download/latest/selfhost-0k-assets-colocated.zip) includes assets.)
 
 ## Download 0K's tunnel
 
