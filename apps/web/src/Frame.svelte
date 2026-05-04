@@ -20,9 +20,6 @@
 
   const upsertServiceWorker = async () => {
     const swUrl = new URL('./sw.js', document.baseURI);
-    if (swUrl.hostname == 'esm.sh') {
-      swUrl.searchParams.set('raw', '');
-    }
     const registration = await navigator.serviceWorker.register(swUrl);
     await navigator.serviceWorker.ready;
 

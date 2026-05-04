@@ -1,4 +1,4 @@
-# [Launch 0K](https://cdn.jsdelivr.net/gh/abndnce/b0k@main/jsdelivr/index.svg) ([esm.sh](https://esm.sh/gh/abndnce/b0k@main/esm.sh/index.html?raw), [IPFS](https://ipfs.io/ipns/k51qzi5uqu5dgn54ka0d91se4ytmy9uiend9pk4zfuwroenqhwllm05hzwuac6/), [IPFS 2](https://k51qzi5uqu5dgn54ka0d91se4ytmy9uiend9pk4zfuwroenqhwllm05hzwuac6.ipns.dweb.link/))
+# [Launch 0K](https://cdn.jsdelivr.net/gh/abndnce/b0k@main/jsdelivr/index.svg) ([esm.sh](https://raw.esm.sh/gh/abndnce/b0k@main/esm.sh/index.html), [IPFS](https://ipfs.io/ipns/k51qzi5uqu5dgn54ka0d91se4ytmy9uiend9pk4zfuwroenqhwllm05hzwuac6/), [IPFS 2](https://k51qzi5uqu5dgn54ka0d91se4ytmy9uiend9pk4zfuwroenqhwllm05hzwuac6.ipns.dweb.link/))
 <!-- https://cdn.statically.io/gh/abndnce/b0k@main/jsdelivr/index.svg -->
 
 0K can connect directly to GitHub, open a downloaded website, or access the rest of the internet via WebRTC.

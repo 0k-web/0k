@@ -61,7 +61,7 @@ const cdnUrl = (a: PackageAsset) => {
   return WEB_ASSET_SOURCE == 'jsdelivr'
     ? `https://cdn.jsdelivr.net/npm/${a.packageName}@${v}/${a.file}`
     : WEB_ASSET_SOURCE == 'esmsh'
-      ? `https://esm.sh/${a.packageName}@${v}/${a.file}?raw`
+      ? `https://raw.esm.sh/${a.packageName}@${v}/${a.file}`
       : `https://cdn.statically.io/npm/${a.packageName}@${v}/${a.file}`;
 };
 
