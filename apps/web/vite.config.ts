@@ -86,6 +86,7 @@ const bundleServiceWorker = (): Plugin => {
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: '',
   define: {
     defaultGitHubBehavior: JSON.stringify(GITHUB_BEHAVIOR),
   },
@@ -100,8 +101,8 @@ export default defineConfig({
   plugins: [
     svelte(),
     webAssets({ canExternalize: INDEX_FORMAT == 'html' }),
-    viteSingleFile(),
-    normalizeSingleFile(),
+    INDEX_FORMAT != 'dir' && viteSingleFile(),
+    INDEX_FORMAT != 'dir' && normalizeSingleFile(),
     INDEX_FORMAT == 'svg' ? emitIndexSvg() : undefined,
     bundleServiceWorker(),
   ],

@@ -132,7 +132,7 @@ jobs:
         run: zip -r ../../../selfhost-0k-assets-colocated.zip .
 
       - name: Build for IPFS
-        run: ZERO_K_DEFAULT_GITHUB_BEHAVIOR=githubusercontent ZERO_K_INDEX_FORMAT=html pnpm build
+        run: ZERO_K_DEFAULT_GITHUB_BEHAVIOR=githubusercontent ZERO_K_INDEX_FORMAT=dir pnpm build
       - name: Upload to IPFS
         env:
           PINATA_JWT: ${{ secrets.PINATA_JWT }}
