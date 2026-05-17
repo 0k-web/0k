@@ -60,7 +60,7 @@
   </div>
 
   <label class="split">
-    <p>Tunnel</p>
+    <p><a href="https://github.com/abndnce/pulsar">Pulsar</a> tunnel</p>
     <input
       type="text"
       bind:value={hostInput}
@@ -162,5 +162,9 @@
   }
   .split input::placeholder {
     color: var(--m3c-on-surface-variant);
+  }
+
+  a {
+    color: var(--m3c-primary);
   }
 </style>
