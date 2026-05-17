@@ -46,24 +46,24 @@ jobs:
       - name: Copy jsDelivr SVG
         run: |
           mkdir -p builds-repo/jsdelivr
-          cp apps/web/dist/index.svg builds-repo/jsdelivr/index.svg
-          cp apps/web/dist/sw.js builds-repo/jsdelivr/sw.js
+          cp dist/index.svg builds-repo/jsdelivr/index.svg
+          cp dist/sw.js builds-repo/jsdelivr/sw.js
 
       - name: Build esm.sh HTML
         run: ZERO_K_CDN=esmsh ZERO_K_DEFAULT_GITHUB_BEHAVIOR=githubusercontent ZERO_K_INDEX_FORMAT=html pnpm build
       - name: Copy esm.sh HTML
         run: |
           mkdir -p builds-repo/esm.sh
-          cp apps/web/dist/index.html builds-repo/esm.sh/index.html
-          cp apps/web/dist/sw.js builds-repo/esm.sh/sw.js
+          cp dist/index.html builds-repo/esm.sh/index.html
+          cp dist/sw.js builds-repo/esm.sh/sw.js
 
       - name: Build Statically SVG
         run: ZERO_K_CDN=statically ZERO_K_DEFAULT_GITHUB_BEHAVIOR=statically ZERO_K_INDEX_FORMAT=svg pnpm build
       - name: Copy Statically SVG
         run: |
           mkdir -p builds-repo/statically
-          cp apps/web/dist/index.svg builds-repo/statically/index.svg
-          cp apps/web/dist/sw.js builds-repo/statically/sw.js
+          cp dist/index.svg builds-repo/statically/index.svg
+          cp dist/sw.js builds-repo/statically/sw.js
 
       - name: Push builds repo
         working-directory: builds-repo
@@ -81,26 +81,26 @@ jobs:
       - name: Build selfhost-0k.zip
         run: ZERO_K_CDN=jsdelivr ZERO_K_DEFAULT_GITHUB_BEHAVIOR=jsdelivr pnpm build
       - name: Zip selfhost-0k.zip
-        working-directory: apps/web/dist
-        run: zip -r ../../../selfhost-0k.zip .
+        working-directory: dist
+        run: zip -r ../selfhost-0k.zip .
 
       - name: Build selfhost-0k-assets-esmsh.zip
         run: ZERO_K_CDN=esmsh ZERO_K_DEFAULT_GITHUB_BEHAVIOR=githubusercontent pnpm build
       - name: Zip selfhost-0k-assets-esmsh.zip
-        working-directory: apps/web/dist
-        run: zip -r ../../../selfhost-0k-assets-esmsh.zip .
+        working-directory: dist
+        run: zip -r ../selfhost-0k-assets-esmsh.zip .
 
       - name: Build selfhost-0k-assets-statically.zip
         run: ZERO_K_CDN=statically ZERO_K_DEFAULT_GITHUB_BEHAVIOR=statically pnpm build
       - name: Zip selfhost-0k-assets-statically.zip
-        working-directory: apps/web/dist
-        run: zip -r ../../../selfhost-0k-assets-statically.zip .
+        working-directory: dist
+        run: zip -r ../selfhost-0k-assets-statically.zip .
 
       - name: Build selfhost-0k-assets-colocated.zip
         run: pnpm build
       - name: Zip selfhost-0k-assets-colocated.zip
-        working-directory: apps/web/dist
-        run: zip -r ../../../selfhost-0k-assets-colocated.zip .
+        working-directory: dist
+        run: zip -r ../selfhost-0k-assets-colocated.zip .
 
       - name: Build for IPFS
         run: ZERO_K_DEFAULT_GITHUB_BEHAVIOR=githubusercontent ZERO_K_INDEX_FORMAT=dir pnpm build
@@ -118,11 +118,11 @@ jobs:
                 if (e.isDirectory()) walk(p); else files.push(p);
               }
             }
-            walk('apps/web/dist');
+            walk('dist');
             const form = new FormData();
             const folder = \`deploy-\${new Date().toISOString()}/\`;
             for (const f of files) {
-              form.append('file', new Blob([readFileSync(f)]), folder + relative('apps/web/dist', f));
+              form.append('file', new Blob([readFileSync(f)]), folder + relative('dist', f));
             }
             form.append('pinataMetadata', JSON.stringify({ name: 'deploy-' + Date.now() }));
             form.append('pinataOptions', JSON.stringify({ cidVersion: 1 }));
