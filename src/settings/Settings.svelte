@@ -2,7 +2,7 @@
   import CreateLocalSite from './CreateLocalSite.svelte';
   import { githubBehaviorOptions, normalizeGitHubBehavior } from '../githubBehavior';
   import { keyGitHubBehavior } from './settingsLocalStorage';
-  import { ensureConnected } from '../webrtc';
+  import { getTunnelState, detectMode, patchTunnelState } from '../tunnel-state.svelte';
 
   let { close }: { close: () => void } = $props();
 
@@ -11,6 +11,17 @@
   updateCaches();
 
   let localSiteOpen = $state(false);
+
+  const tunnel = getTunnelState();
+  let hostInput = $state(localStorage['0k/tunnel-input'] || tunnel.host || tunnel.code || '');
+
+  const saveInput = () => {
+    const input = hostInput.trim();
+    if (input) {
+      localStorage['0k/tunnel-input'] = input;
+      patchTunnelState(detectMode(input));
+    }
+  };
 
   const getGitHubBehavior = () =>
     normalizeGitHubBehavior(localStorage[keyGitHubBehavior], defaultGitHubBehavior);
@@ -47,9 +58,17 @@
       <button class="chip" onclick={() => (localSiteOpen = true)}>+</button>
     </div>
   </div>
+
   <label class="split">
-    <p>Practice connecting to a tunnel</p>
-    <button onclick={() => ensureConnected(true)}>Connect to a tunnel</button>
+    <p>Tunnel</p>
+    <input
+      type="text"
+      bind:value={hostInput}
+      onblur={saveInput}
+      placeholder="IP address or 4-char Nostr code"
+      autocomplete="off"
+      spellcheck="false"
+    />
   </label>
 </dialog>
 
@@ -127,5 +146,21 @@
     padding-inline: 0.5rem;
     border-radius: 0.5rem;
     background-color: var(--m3c-surface-container-highest);
+  }
+
+  .split input {
+    background-color: var(--m3c-surface-container-highest);
+    border-radius: 1rem;
+    padding-inline: 0.5rem;
+    padding-block: 0.25rem;
+    align-self: stretch;
+    border: none;
+    color: var(--m3c-on-surface);
+    font-size: 0.875rem;
+    outline: none;
+    min-width: 10rem;
+  }
+  .split input::placeholder {
+    color: var(--m3c-on-surface-variant);
   }
 </style>

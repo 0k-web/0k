@@ -1,0 +1,41 @@
+
+diff --git a/dist/controller.api.d.ts b/dist/controller.api.d.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..94c9ed05c6536d6ede053304bcc6cf50887a87a7
+--- /dev/null
++++ b/dist/controller.api.d.ts
+@@ -0,0 +1,8 @@
++import { Controller, config } from './types/index';
++
++declare const _default: {
++    Controller: typeof Controller;
++    config: typeof config;
++};
++
++export default _default;
+diff --git a/dist/controller.api.js b/dist/controller.api.js
+index 0028475eb11789c8f59e945a5cc13e76f3eb5e4b..7d9099ad2c2c3e4f220420878f9beca655accb28 100644
+--- a/dist/controller.api.js
++++ b/dist/controller.api.js
+@@ -41,3 +41,4 @@ self.WASM = '${r}';`,i=s}return[{body:i,status:200,statusText:"OK",headers:[["Co
+ 					})();
+ 					`},codecEncode:l,codecDecode:d}}}constructor(e,r){this.controller=e,this.element=r,this.id=c(),this.prefix=this.controller.prefix+this.id+"/",this.fetchHandler=new $scramjet.ScramjetFetchHandler({crossOriginIsolated:self.crossOriginIsolated,context:this.context,transport:e.transport,async sendSetCookie(e,t){},fetchBlobUrl:async e=>t.Sr.fromNativeResponse(await fetch(e)),fetchDataUrl:async e=>t.Sr.fromNativeResponse(await fetch(e))})}go(e){let t=$scramjet.rewriteUrl(e,this.context,{origin:new URL(location.href),base:new URL(location.href)});this.element.src=t}}})(),$scramjetController=s})();
+ //# sourceMappingURL=controller.api.js.map
++export default $scramjetController;
+diff --git a/dist/controller.api.js.map b/dist/controller.api.js.map
+deleted file mode 100644
+index 10c11a1c855a732cd8ca24c2e874bb4298320ada..0000000000000000000000000000000000000000
+diff --git a/dist/controller.inject.js.map b/dist/controller.inject.js.map
+deleted file mode 100644
+index d320a3cddec5202f29767f9d8e6fa2892dbcd923..0000000000000000000000000000000000000000
+diff --git a/dist/controller.sw.js b/dist/controller.sw.js
+index 9a305938f64b7799e573f2c6aa6298e0b1da80ac..b265e7c734589b150487b96fab8b6918266b7d3a 100644
+--- a/dist/controller.sw.js
++++ b/dist/controller.sw.js
+@@ -1,2 +1,3 @@
+ var $scramjetController;(()=>{var e={805(e,t,r){r.d(t,{C:()=>o});class o{methods;id;sendRaw;counter=0;promiseCallbacks=new Map;constructor(e,t,r){this.methods=e,this.id=t,this.sendRaw=r}recieve(e){if(null==e||"object"!=typeof e)return;let t=e[this.id];if(null==t||"object"!=typeof t)return;let r=t.$type;if("response"===r){let e=t.$token,r=t.$data,o=t.$error,s=this.promiseCallbacks.get(e);if(!s)return;this.promiseCallbacks.delete(e),void 0!==o?s.reject(Error(o)):s.resolve(r)}else if("request"===r){let e=t.$method,r=t.$args;this.methods[e](r).then(e=>{this.sendRaw({[this.id]:{$type:"response",$token:t.$token,$data:e?.[0]}},e?.[1])}).catch(e=>{console.error(e),this.sendRaw({[this.id]:{$type:"response",$token:t.$token,$error:e?.toString()||"Unknown error"}},[])})}}call(e,t,r=[]){let o=this.counter++;return new Promise((s,a)=>{this.promiseCallbacks.set(o,{resolve:s,reject:a}),this.sendRaw({[this.id]:{$type:"request",$method:e,$args:t,$token:o}},r)})}}}},t={};function r(o){var s=t[o];if(void 0!==s)return s.exports;var a=t[o]={exports:{}};return e[o](a,a.exports,r),a.exports}r.d=(e,t)=>{for(var o in t)r.o(t,o)&&!r.o(e,o)&&Object.defineProperty(e,o,{enumerable:!0,get:t[o]})},r.o=(e,t)=>Object.prototype.hasOwnProperty.call(e,t),r.r=e=>{"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})};var o={};(()=>{r.r(o),r.d(o,{route:()=>i,shouldRoute:()=>n});var e=r(805);let t={};addEventListener("message",e=>{if(e.data&&"object"==typeof e.data){if(e.data.$sw$setCookieDone&&"object"==typeof e.data.$sw$setCookieDone){let r=e.data.$sw$setCookieDone,o=t[r.id];o&&(o(),delete t[r.id])}if(e.data.$sw$initRemoteTransport&&"object"==typeof e.data.$sw$initRemoteTransport){let{port:t,prefix:r}=e.data.$sw$initRemoteTransport,o=a.find(e=>new URL(r).pathname.startsWith(e.prefix));if(!o)return void console.error("No relevant controller found for transport init");o.rpc.call("initRemoteTransport",t,[t])}}});class s{prefix;id;rpc;constructor(r,o,s){this.prefix=r,this.id=o,this.rpc=new e.C({sendSetCookie:async({url:e,cookie:r})=>{let o=await self.clients.matchAll(),s=[];for(let a of o){let o=Math.random().toString(36).substring(2,10);a.postMessage({$controller$setCookie:{url:e,cookie:r,id:o}}),s.push(new Promise(e=>{t[o]=e}))}await Promise.race([new Promise(e=>setTimeout(()=>{console.error("timed out waiting for set cookie response (deadlock?)"),e()},1e3)),s])}},"tabchannel-"+o,(e,t)=>{s.postMessage(e,t)}),s.addEventListener("message",e=>{this.rpc.recieve(e.data)}),s.onmessageerror=console.error,this.rpc.call("ready",null)}}let a=[];function n(e){let t=new URL(e.request.url);return void 0!==a.find(e=>t.pathname.startsWith(e.prefix))}async function i(e){try{let t=new URL(e.request.url),r=a.find(e=>t.pathname.startsWith(e.prefix)),o=await clients.get(e.clientId),s=[...e.request.headers],n=await r.rpc.call("request",{rawUrl:e.request.url,destination:e.request.destination,mode:e.request.mode,referrer:e.request.referrer,method:e.request.method,body:e.request.body,cache:e.request.cache,forceCrossOriginIsolated:!1,initialHeaders:s,rawClientUrl:o?o.url:void 0},e.request.body instanceof ReadableStream||e.request.body instanceof ArrayBuffer?[e.request.body]:void 0);return new Response(n.body,{status:n.status,statusText:n.statusText,headers:n.headers})}catch(e){return console.error("Service Worker error:",e),new Response("Internal Service Worker Error: "+e.message,{status:500})}}addEventListener("message",e=>{if(!e.data||"object"!=typeof e.data||!e.data.$controller$init||"object"!=typeof e.data.$controller$init)return;let t=e.data.$controller$init;a.push(new s(t.prefix,t.id,e.ports[0]))})})(),$scramjetController=o})();
+ //# sourceMappingURL=controller.sw.js.map
++export default $scramjetController;
+diff --git a/dist/controller.sw.js.map b/dist/controller.sw.js.map
+deleted file mode 100644
+index fc28505dcfb7ff403a23ad853197059cbc0153b8..0000000000000000000000000000000000000000

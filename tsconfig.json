@@ -1,4 +1,4 @@
 {
   "files": [],
-  "references": [{ "path": "./apps/web" }, { "path": "./apps/relay" }]
+  "references": [{ "path": "./tsconfig.app.json" }, { "path": "./tsconfig.node.json" }]
 }

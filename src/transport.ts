@@ -14,12 +14,29 @@ import {
   makeBody,
 } from './transport-logic+';
 import { keyGitHubBehavior } from './settings/settingsLocalStorage';
-import { connectOverWebRtc, initWebRtcTransport, requestOverWebRtc } from './webrtc';
+import {
+  connectOverTunnel,
+  connectTunnel,
+  DEFAULT_TUNNEL_HOST,
+  initTunnelTransport,
+  requestOverTunnel,
+} from './tunnel';
+
+function getRawHeader(headers: RawHeaders, name: string) {
+  const lowerName = name.toLowerCase();
+  return headers.find(([header]) => header.toLowerCase() === lowerName)?.[1];
+}
+
+function shouldPromptForRequest(method: string, headers: RawHeaders) {
+  const normalizedMethod = method.toUpperCase();
+  const accept = getRawHeader(headers, 'accept')?.toLowerCase() ?? '';
+  return (normalizedMethod == 'GET' || normalizedMethod == 'POST') && accept.includes('text/html');
+}
 
 export class ZeroKTransport implements ProxyTransport {
   ready = false;
   async init() {
-    await initWebRtcTransport();
+    await initTunnelTransport();
     this.ready = true;
   }
   connect(
@@ -31,7 +48,7 @@ export class ZeroKTransport implements ProxyTransport {
     onclose: (code: number, reason: string) => void,
     onerror: (error: string) => void,
   ): [(data: WebSocketDataType) => void, (code: number, reason: string) => void] {
-    return connectOverWebRtc(url, protocols, requestHeaders, onopen, onmessage, onclose, onerror);
+    return connectOverTunnel(url, protocols, requestHeaders, onopen, onmessage, onclose, onerror);
   }
   async request(
     remote: URL,
@@ -88,15 +105,24 @@ export class ZeroKTransport implements ProxyTransport {
       return await loadPassthrough(githubUrlFn(matchGithubRaw[1], matchGithubRaw[2]));
     }
 
+    if (shouldPromptForRequest(method, _headers)) {
+      const savedInput = localStorage['0k/tunnel-input'] || DEFAULT_TUNNEL_HOST;
+      try {
+        await connectTunnel(savedInput);
+      } catch {
+        // error is already reflected in tunnel state
+      }
+    }
+
     try {
-      return await requestOverWebRtc(remote, method, _body, _headers, _signal);
+      return await requestOverTunnel(remote, method, _body, _headers, _signal);
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
       return makeBody(
         502,
         'Bad Gateway',
         new Headers(),
-        `WebRTC tunnel request failed: ${message}`,
+        `Tunnel request failed: ${message}`,
       );
     }
   }

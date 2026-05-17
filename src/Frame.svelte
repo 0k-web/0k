@@ -16,7 +16,7 @@
 <script lang="ts">
   import home from './assets/home.html?url&inline';
   import { ZeroKTransport } from './transport';
-  import { primeWebRtc } from './webrtc';
+  import { initTunnelTransport } from './tunnel';
 
   const upsertServiceWorker = async () => {
     const swUrl = new URL('./sw.js', document.baseURI);
@@ -37,7 +37,7 @@
 
     status = 'Initializing controls';
     const transport = new ZeroKTransport();
-    primeWebRtc();
+    initTunnelTransport();
     const controller = new Controller({
       serviceworker,
       transport,

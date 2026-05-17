@@ -32,7 +32,14 @@ const normalizeSingleFile = (): Plugin => {
 
       const outDir = resolve(CONFIG.root, CONFIG.build.outDir);
       const INDEX_HTML_PATH = resolve(outDir, 'index.html');
-      const html = await readFile(INDEX_HTML_PATH, 'utf8');
+
+      let html: string;
+      try {
+        html = await readFile(INDEX_HTML_PATH, 'utf8');
+      } catch {
+        // Not every closeBundle invocation has an index.html (e.g. the SW build)
+        return;
+      }
 
       await writeFile(
         INDEX_HTML_PATH,

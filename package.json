@@ -4,20 +4,25 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "pnpm --filter \"@0k-web/web\" dev",
-    "dev:relay": "pnpm --filter \"@0k-web/relay\" dev",
-    "build": "pnpm --filter \"@0k-web/web\" build",
-    "build:relay": "pnpm --filter \"@0k-web/relay\" build",
-    "preview": "pnpm --filter \"@0k-web/web\" preview",
-    "knip": "knip",
-    "check": "pnpm --filter \"@0k-web/web\" check",
-    "format": "pnpm --filter \"@0k-web/web\" format"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "check": "svelte-check --tsconfig ./tsconfig.app.json && tsc -p tsconfig.node.json",
+    "format": "prettier . --write"
   },
   "devDependencies": {
-    "@types/node": "^24.12.0",
-    "knip": "5.63.1",
-    "prettier": "^3.8.1",
-    "prettier-plugin-svelte": "^3.5.1",
-    "typescript": "~5.9.3"
+    "@abndnce/pulsar-client": "^0.0.12",
+    "@mercuryworkshop/proxy-transports": "^1.0.2",
+    "@mercuryworkshop/scramjet": "2.0.2-alpha",
+    "@mercuryworkshop/scramjet-controller": "^0.0.9",
+    "@sveltejs/vite-plugin-svelte": "^7.1.2",
+    "@unocss/reset": "^66.6.8",
+    "@zip.js/zip.js": "^2.8.26",
+    "libcurl.js": "^0.7.4",
+    "rolldown": "1.0.0-rc.12",
+    "svelte": "^5.55.7",
+    "svelte-check": "^4.4.8",
+    "vite": "^8.0.13",
+    "vite-plugin-singlefile": "^2.3.3"
   }
 }

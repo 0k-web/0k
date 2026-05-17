@@ -1,14 +1,5 @@
-packages:
-  - "apps/*"
-  - "packages/*"
-  - "crates/*"
-
 allowBuilds:
   '@mercuryworkshop/scramjet': false
-  esbuild: false
-  sharp: false
-  workerd: false
-
 patchedDependencies:
-  '@mercuryworkshop/scramjet-controller': patches/@mercuryworkshop__scramjet-controller.patch
-  '@zip.js/zip.js': patches/@zip.js__zip.js.patch
+  '@mercuryworkshop/scramjet-controller@0.0.9': patches/@mercuryworkshop__scramjet-controller@0.0.9.patch
+  '@zip.js/zip.js@2.8.26': patches/@zip.js__zip.js@2.8.26.patch

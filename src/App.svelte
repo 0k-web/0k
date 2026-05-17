@@ -1,10 +1,8 @@
 <script lang="ts">
   import Controls from './Controls.svelte';
   import ChromeDialog from './ChromeDialog.svelte';
-  import ConnectDialog from './ConnectDialog.svelte';
   import Frame, { getGo } from './Frame.svelte';
   import Settings from './settings/Settings.svelte';
-  import { getWebRtcState } from './webrtc-state.svelte';
 
   let url = $state('');
   let go = $derived(getGo());
@@ -16,7 +14,6 @@
   let chromeDialogOpen = $state(
     !navigator.userAgent.toLowerCase().includes('chrome') && !localStorage['0k/use-anyway'],
   );
-  const webrtc = getWebRtcState();
 </script>
 
 <svelte:window
@@ -27,9 +24,6 @@
   }}
 />
 <Frame urlchange={(u) => (url = u)} />
-{#if webrtc.promptOpen}
-  <ConnectDialog />
-{/if}
 {#if go}
   <Controls {url} {go} />
 {/if}
