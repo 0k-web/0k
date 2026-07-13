@@ -27,16 +27,12 @@ jobs:
           token: ${{ secrets.BUILDS_PAT }}
           path: builds-repo
 
-      - name: Set up pnpm
-        uses: pnpm/action-setup@v6
+      - name: Set up PNPM and Node
+        uses: pnpm/setup@v1
         with:
+          runtime: node@latest
+          cache: true
           version: latest
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 25
-          cache: pnpm
 
       - name: Install
         run: pnpm install --frozen-lockfile
